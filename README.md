@@ -21,13 +21,13 @@ $ ./configure --enable-fdk-aac --disable-gtk --launch-jobs=$(nproc) --launch
 
 For normal Ongoing-type occasion, use:
 
-`./animegrimoire` `[Ayylmaosubs] This anime title - 01 [720p].mkv`
+`./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p].mkv`
 
 On BDs or if source file also have [CRC32] tag on it use:
 
-`./animegrimoire` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `NUM`
+`./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `NUM`
 
-=> `./animegrimoire` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `42`
+=> `./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `42`
 
 so the script only read character number 1-42 while ignoring CRC32 tag.
 
@@ -48,14 +48,3 @@ See the script and uncomment it yourself, or point your rclone config on right l
 9. Clean up files
 10. Upload encoded files via rclone (optional)
 11. Count how long the script has been running and exit.
-
-
-
-
-
-
-
-
-
-
-
