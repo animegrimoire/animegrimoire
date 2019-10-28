@@ -17,7 +17,32 @@ $ ./configure --enable-fdk-aac --disable-gtk --launch-jobs=$(nproc) --launch
 3. Put this script inside `for` loop, or inside torrent's client `do something after files finished downloading`
 4. Logging function is generally nice to have but it's disabled by default
 
-### How-to-use:
+### How-to-use (BATCH):
+1. to run single file
+
+`animegrimoire.bat ".\source\file that you wanted to encode [01].mkv"`
+
+2. For all file in folder
+Use `for_all_file_in_folder_source_do_animegrimoire_script.bat` script.
+
+### This is the structure of the file and folder in Batch version:
+```
+your_encoding_folder/
+├── lib/
+│   ├── ffmpeg.exe
+│   ├── HandBrakeCLI.exe
+│   └── x264_animegrimoire.json
+├── source/
+│   ├── file that you wanted to encode [01].mkv
+│   └── [fansub] file that you wanted to encode - 02.mkv
+├── animegrimoire.bat
+└── for_all_file_in_folder_source_do_animegrimoire_script.bat
+```
+
+
+
+
+### How-to-use (SHELL):
 
 For normal Ongoing-type occasion, use:
 
