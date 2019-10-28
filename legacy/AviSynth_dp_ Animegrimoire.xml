@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<GenericProfileOfAviSynthSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Animegrimoire</Name>
+  <Settings>
+    <Mod16Method>none</Mod16Method>
+    <ModValue>mod16</ModValue>
+    <Resize>true</Resize>
+    <NvResize>false</NvResize>
+    <Upsize>false</Upsize>
+    <Template>&lt;input&gt;
+&lt;deinterlace&gt;
+LoadPlugin("C:\Program Files\megui\tools\avisynth_plugin\aWarpSharp2.dll")
+LoadPlugin("C:\Program Files\megui\tools\avisynth_plugin\Toon-v1.1.dll")
+&lt;denoise&gt;
+&lt;resize&gt;
+aWarpSharp()
+Toon(strength=0.3)
+LoadPlugin("C:\Program Files\megui\tools\avisynth_plugin\VSFilter.dll")
+TextSub("C:\Program Files\megui\tools\avisynth_plugin\Cyber12.ass", 1)
+&lt;crop&gt;
+</Template>
+    <ResizeMethod>Spline32</ResizeMethod>
+    <DenoiseMethod>MinimalNoise</DenoiseMethod>
+    <PreferAnimeDeinterlace>true</PreferAnimeDeinterlace>
+    <Denoise>true</Denoise>
+    <MPEG2Deblock>false</MPEG2Deblock>
+    <ColourCorrect>true</ColourCorrect>
+    <DSS2>false</DSS2>
+    <AcceptableAspectError>1</AcceptableAspectError>
+  </Settings>
+</GenericProfileOfAviSynthSettings>

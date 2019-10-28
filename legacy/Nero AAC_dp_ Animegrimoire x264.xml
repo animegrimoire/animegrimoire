@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<GenericProfileOfNeroAACSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Animegrimoire x264</Name>
+  <Settings>
+    <PreferredDecoderString>LWLibavAudioSource</PreferredDecoderString>
+    <DownmixMode>StereoDownmix</DownmixMode>
+    <BitrateMode>ABR</BitrateMode>
+    <Bitrate>32</Bitrate>
+    <AutoGain>true</AutoGain>
+    <SampleRateType>deprecated</SampleRateType>
+    <SampleRate>ConvertTo44100</SampleRate>
+    <TimeModification>KeepOriginal</TimeModification>
+    <ApplyDRC>false</ApplyDRC>
+    <Normalize>100</Normalize>
+    <CustomEncoderOptions />
+    <Profile>PS</Profile>
+    <Quality>0.5</Quality>
+  </Settings>
+</GenericProfileOfNeroAACSettings>
