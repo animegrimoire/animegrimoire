@@ -57,12 +57,14 @@ so the script only read character number 1-42 while ignoring CRC32 tag.
 ```
 home/$USER/
        ├── .local/bin/
-       │           └── animegrimoire.sh
-       │
+       │      │    └── animegrimoire.sh
+       │      │
+       │      └──/preset/
+       │             └──x264_animegrimoire.json
        └── Encodes/
               ├── [Ayylmaosub] file that you wanted to encode - 01 [720p].mkv
               └── [fansub] file that you wanted to encode - 02 [720p][12345678].mkv
-/usr/bin
+/usr/bin/
       ├── ffmpeg
       ├── rename
       ├── rhash
