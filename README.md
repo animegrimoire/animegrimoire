@@ -39,22 +39,36 @@ your_encoding_folder/
 └── for_all_file_in_folder_source_do_animegrimoire_script.bat
 ```
 
-
-
-
 ### How-to-use (SHELL):
 
 For normal Ongoing-type occasion, use:
 
-`./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p].mkv`
+`animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p].mkv`
 
 On BDs or if source file also have [CRC32] tag on it use:
 
-`./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `NUM`
+`animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `NUM`
 
-=> `./animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `42`
+=> `animegrimoire.sh` `[Ayylmaosubs] This anime title - 01 [720p][12345678].mkv` `42`
 
 so the script only read character number 1-42 while ignoring CRC32 tag.
+
+### This is the structure of the file and folder in Shell version:
+```
+home/$USER/
+       ├── .local/bin/
+       │           └── animegrimoire.sh
+       │
+       └── Encodes/
+              ├── [Ayylmaosub] file that you wanted to encode - 01 [720p].mkv
+              └── [fansub] file that you wanted to encode - 02 [720p][12345678].mkv
+/usr/bin
+      ├── ffmpeg
+      ├── rename
+      ├── rhash
+      └── rclone
+```
+
 
 ### Automatic uploading via rclone
 
