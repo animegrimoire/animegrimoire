@@ -16,9 +16,7 @@ startl=$(date +%s)
 #|       │      ├── [Ayylmaosub] file that you wanted to encode - 01 [720p].mkv            |#
 #|       │      └── [fansub] file that you wanted to encode - 02 [720p][12345678].mkv      |#
 #|       │                                                                                 |#
-#|       ├── finish_encoded/                                                               |#
-#|       │                                                                                 |#
-#|       └── finish_uploaded/                                                              |#
+#|       └── finish_encoded/                                                               |#
 #|                                                                                         |#
 #|/usr/bin/                                                                                |#
 #|      ├── ffmpeg                                                                         |#
@@ -49,7 +47,6 @@ done
 # Capture both input and hold it somewhere
 input=$1
 output="$(echo "$1" | cut -f 1 -d '.').mp4"
-upload="$(echo "$1" | cut -f 1 -d '.')*.mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
@@ -90,15 +87,14 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0
 /usr/bin/rename -v $fansub animegrimoire "$output" > hold.name
 /usr/bin/rhash --embed-crc --embed-crc-delimiter='' "$(cat hold.name | cut -d "\`" -f3 | cut -d "'" -f 1)" && rm -v hold.name
 
-# Upload output files to onedrive using rclone
-rclone_config="/home/aurora/.config/rclone/rclone.conf"
-rclone -vv --config "$rclone_config" copy "$upload" transport:Transport
-
 # Clean up. 
 rm -v *.*tf *.*TF
 rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
 mv -v "$1" ../finish_encoded
-mv -v "$upload" ../finish_uploaded
+
+# Upload output files to onedrive using rclone
+rclone_config="/home/aurora/.config/rclone/rclone.conf"
+for file in *.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport; done
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
