@@ -55,8 +55,8 @@ fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
 
 # Extract fonts, install and update cache
-ffmpeg -dump_attachment:t "" -i "$1"
-rclone -vv copy *.*tf /home/aurora/.fonts
+ffmpeg -dump_attachment:t "" -i "$1" -y
+for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/aurora/.fonts; done
 fc-cache -f -v
 
 # Remove CRC32 value from input files
@@ -76,9 +76,8 @@ fi
 /usr/bin/ffmpeg -i "$input" -map 0 -map 0:s -codec copy "$1_tmp.mkv" -y
 
 # Stage 3:	embed watermark to comply animegrimoire's global rule
-sed '/Style\: Default/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "modified_sub.tmp1"
-sed '/Style\: Main/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "modified_sub.tmp1" > "modified_sub.tmp2"
-sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0000,,animegrimoire.org' "modified_sub.tmp2" > "$subtitle"
+sed '/Format\: Name/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "modified_sub.tmp1"
+sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0000,,animegrimoire.org' "modified_sub.tmp1" > "$subtitle"
 
 # Stage 4:	send back the modified subtitle into $1(mkv) container
 /usr/bin/ffmpeg -i "$1_tmp.mkv" -i "$subtitle" -c:v copy -c:a copy -c:s copy -map 0:0 -map 0:1 -map 1:0 -metadata:s:s:0 language=eng "$1_sub.mkv" -y
@@ -96,7 +95,7 @@ rclone_config="/home/aurora/.config/rclone/rclone.conf"
 rclone -vv --config "$rclone_config" copy "$upload" transport:Transport
 
 # Clean up. 
-rm -v *.*tf
+rm -v *.*tf *.*TF
 rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
 mv -v "$1" ../finish_encoded
 mv -v "$upload" ../finish_uploaded
