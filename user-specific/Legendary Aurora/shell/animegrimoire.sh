@@ -16,7 +16,8 @@ startl=$(date +%s)
 #|       │      ├── [Ayylmaosub] file that you wanted to encode - 01 [720p].mkv            |#
 #|       │      └── [fansub] file that you wanted to encode - 02 [720p][12345678].mkv      |#
 #|       │                                                                                 |#
-#|       └── finish_encoded/                                                               |#
+#|       ├── finish_encoded/                                                               |#
+#|       └── finish_uploaded/                                                               |#
 #|                                                                                         |#
 #|/usr/bin/                                                                                |#
 #|      ├── ffmpeg                                                                         |#
@@ -94,7 +95,7 @@ mv -v "$1" ../finish_encoded
 
 # Upload output files to onedrive using rclone
 rclone_config="/home/aurora/.config/rclone/rclone.conf"
-for file in *.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport; done
+for file in *.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport && mv -v "$file" ../finish_uploaded/; done 
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
