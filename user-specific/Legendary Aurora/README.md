@@ -6,7 +6,7 @@
 
 ## Prologue
 "Legendary Aurora" or as we call "L/Aurora" were never a single-man show. It's always consist from 4 to 6 members to keep the account, and forum alive.
-This document is published for transparency report, we are not going to hide the fact that "L/Aurora" operates this way. Those 4 to members will be called *Keeper* from now on.
+This document is published for transparency report, we are not going to hide the fact that "L/Aurora" operates this way. Those 4 members or more will be called *Keeper* from now on.
 
 ### Section 1: Forum Moderation
 - *Keeper* is prohibited log into "Legendary Aurora" account by password. Everyone must uses centralized web-browsers which already includes with live-session cookie and using one static public IPv4 address.
@@ -25,7 +25,7 @@ This document is published for transparency report, we are not going to hide the
 - *Keeper* must provide content forum backup as long as anime uploader following rules that stated in this [thread](https://animegrimoire.org/showthread.php?tid=740)
 
 ### Section 3: Forum Request
-"Request" is anything that comes from [Request](https://animegrimoire.org/forumdisplay.php?fid=5) subforum but not limited to anything that comes from external site.
+"Request" is anything that comes from [Request](https://animegrimoire.org/forumdisplay.php?fid=5) subforum includes anything that comes from external site.
 
  Once a request is published, *Keeper* is obligated to do:
  - See **[Request](https://animegrimoire.org/forumdisplay.php?fid=5): How to make a good request thread: An informative guide.**
@@ -56,7 +56,7 @@ This document is published for transparency report, we are not going to hide the
 
    We are here because we care for low-end segment where people just download anime and enjoy it without bothering too much about visual quality. May in rare chance there's someone feeling guilty for keep downloading stuff for free, lead them to purchase respective mentioned anime whether it's a figures, bd, merchandise or anything that related to them to keep anime industry stay alive.
 
->  Once upon a time there's a fool that loves quick download stuff for free and simply be happy while watching it. I were once *that* fool. Now we are returning the favor to make anyone else to be happy like we once did. May our time is well-spent, may our money is used for better progression and everyone is happy. *-* [*libev10.*](https://t.me/libev10)
+>  *Once upon a time there's a fool that loves quick download stuff for free and simply be happy while watching it. I were once *that* fool. Now we are returning the favor to make anyone else to be happy like we once did. May our time is well-spent, may our money is used for better progression and everyone is happy.* *-* [*libev10.*](https://t.me/libev10)
 
 *Keeper*@[*discord*](https://discord.gg/HubPERS)
 ======
