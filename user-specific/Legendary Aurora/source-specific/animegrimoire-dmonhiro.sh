@@ -65,7 +65,7 @@ rm -v "$file_name_sub.mkv"
 mv -v "$file_name" ../finish_encoded
 mv -v "$subtitle" ../finish_encoded
 
-## Upload output files to onedrive using rclone
+##Upload output files to onedrive using rclone
 rclone_config="/home/aurora/.config/rclone/rclone.conf"
 for file in [animegrimoire*.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport && mv -v "$file" ../finish_uploaded/; done 
 
