@@ -6,7 +6,7 @@ Animegrimoire.org preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
 This script and preset absolutely gives no warranty, no tech support, by using any stuff that included here means you already know your shit. 
 
 ## Tested in:
-1. Fedora 30 Server Minimal 64bit Installation inside ESXi environment.
+1. Fedora 31 Server Minimal 64bit Installation inside ESXi environment.
 
 ### Worthwhile note:
 1. Must have properly compiled handbrakecli and installs `ffmpeg`, `rename`, `rhash`.
