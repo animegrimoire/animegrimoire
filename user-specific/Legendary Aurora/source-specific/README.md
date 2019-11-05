@@ -18,5 +18,5 @@
 
 #### Batch:
 ```
-for file in *.mkv; do animegrimoire-dmonhiro "$file" 'Girly Air Force'
+for file in *.mkv; do animegrimoire-dmonhiro "$file" 'Girly Air Force'; done
 ```
