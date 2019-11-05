@@ -1,7 +1,7 @@
 # Source-specific usage guide
 
 ## DmonHiro
-# File structure
+### File structure
 ```
 #|─────────────────────────────────────────────────────────────────────────────────────────|#
 #| home/aurora/                                                                            |#
