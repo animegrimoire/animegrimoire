@@ -42,7 +42,7 @@ preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
 sed '/Format\: Name/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "mod_sub.tmp"
 sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0000,,animegrimoire.org' "mod_sub.tmp" > "$subtitle"
 # 2: Register a new name
-file_name="[animegrimoire] "$2" - $(echo "$1" | cut -f 1 -d ' ') [720p].mkv"
+file_name="[animegrimoire] "$2" - $(echo "$1" | cut -f 1 -d ' ') [BD720p].mkv"
 /usr/bin/mv -v "$1" "$file_name"
 # 3: Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$file_name" -y
