@@ -5,6 +5,7 @@ echo '1) Backup'
 echo '2) Restore'
 echo 'q) Exit'
 read -p '<1/2/q>: ' action
+cd ~
 
 case $action in
 	[1] )
