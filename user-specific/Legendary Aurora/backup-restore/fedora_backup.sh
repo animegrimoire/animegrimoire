@@ -15,7 +15,7 @@ case $action in
 	tar -uvf backup.tar ~/.config/rclone
 	tar -uvf backup.tar ~/.ssh/id_rsa
 	tar -uvf backup.tar ~/.ssh/id_rsa.pub
-	sudo tar -uvf backup.tar /etc/openvpn/client
+	sudo tar -uvf backup.tar /etc/openvpn
 	;;
 
 	[2] )
