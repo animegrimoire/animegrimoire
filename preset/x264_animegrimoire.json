@@ -5,7 +5,8 @@
             "AudioCopyMask": [],
             "AudioEncoderFallback": "none",
             "AudioLanguageList": [
-                "jpn"
+                "jpn",
+                "und"
             ],
             "AudioList": [
                 {
