@@ -6,7 +6,8 @@
             "AudioEncoderFallback": "none",
             "AudioLanguageList": [
                 "jpn",
-                "und"
+                "und",
+                "any"
             ],
             "AudioList": [
                 {
