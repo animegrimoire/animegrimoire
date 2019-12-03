@@ -50,11 +50,11 @@ input=$1
 output="$(echo "$1" | cut -f 1 -d '.').mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
-preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
+preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
-for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/aurora/.fonts; done
+for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/$USER/.fonts; done
 fc-cache -f -v
 
 # Remove CRC32 value from input files
@@ -93,9 +93,8 @@ rm -v *.*tf *.*TF
 rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
 mv -v "$1" ../finish_encoded
 
-# Upload output files to onedrive using rclone
-rclone_config="/home/aurora/.config/rclone/rclone.conf"
-for file in [animegrimoire*.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport && mv -v "$file" ../finish_uploaded/; done 
+# Move output files to syncthing folder
+for files in \[animegrimoire\]\ *.mp4; do mv -v "$files" ../finish_uploaded/; done
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
