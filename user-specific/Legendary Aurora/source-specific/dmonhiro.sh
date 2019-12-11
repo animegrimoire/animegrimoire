@@ -10,7 +10,7 @@ startl=$(date +%s)
 #            : Audio successfuly parsed as 'jp', Subtitle is successfully parsed as 'eng'
 #    Scripted by Celestia, for file structure and styles see /animegrimoire.sh.
 #
-#    USAGE: ./animegrimoire-dmonhiro.sh '[00] - this:EpisodeName.mkv' 'this:New Episode Name'
+#    USAGE: ./dmonhiro.sh '[00] - this:EpisodeName.mkv' 'this:New Episode Name'
 
 ##Logging functions
 readonly l="animegrimoire_dmonhiro_$(date +%d%m%H%M).log"
