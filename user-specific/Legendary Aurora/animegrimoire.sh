@@ -98,3 +98,10 @@ for files in \[animegrimoire\]\ *.mp4; do mv -v "$files" ../finish_uploaded/; do
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
+
+# Push notification to telegram (https://t.me/Animegrimoire)
+telegram_chatid=-1001081862705
+telegram_key="_key_"
+telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
+telegram_message="[Notice] "$1" has successfully encoded in $((endl-startl)) seconds."
+curl -X POST "$telegram_api&text='$telegram_message'"
