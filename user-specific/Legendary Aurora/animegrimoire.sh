@@ -103,5 +103,10 @@ echo "This script was running for $((endl-startl)) seconds."
 telegram_chatid=-1001081862705
 telegram_key="_key_"
 telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
-telegram_message="[Notice] "$1" has successfully encoded in $((endl-startl)) seconds."
-curl -X POST "$telegram_api&text='$telegram_message'"
+message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+curl -X POST "$telegram_api&text='$message'"
+
+# Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
+discord_webhook="_url_"
+discord-msg --webhook-url="$discord_webhook" --description "$message" --color "0xff0004"
+
