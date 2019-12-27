@@ -24,7 +24,7 @@ do
   if pgrep -x "HandBrakeCLI" > /dev/null
     then
       echo "HandBrakeCLI is running, retrying.."
-      sleep 60
+      sleep 600
   else
     echo "HandBrakeCLI process not found, continuing subroutine."
     break
@@ -62,13 +62,23 @@ output=$(echo "$file_name" | cut -f 1 -d '.').mp4
 rm -v *.*tf *.*TF
 rm -v "mod_sub.tmp"
 rm -v "$file_name_sub.mkv"
-mv -v "$file_name" ../finish_encoded
-mv -v "$subtitle" ../finish_encoded
-
-##Upload output files to onedrive using rclone
-rclone_config="/home/aurora/.config/rclone/rclone.conf"
-for file in [animegrimoire*.mp4; do rclone -vv --config "$rclone_config" copy "$file" transport:Transport && mv -v "$file" ../finish_uploaded/; done 
+rm -v "$file_name"
+rm -v "$subtitle"
 
 ##Exit
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
+
+# Push notification to telegram (https://t.me/Animegrimoire)
+telegram_chatid=-1001081862705
+telegram_key="_key_"
+telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
+telegram_message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+curl -X POST "$telegram_api&text='$message'"
+
+# Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
+_webhook="_url_"
+_title="[Finished Encoding]"
+_timestamp="$USER@$HOSTNAME $(date)"
+_description="$USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$timestamp"

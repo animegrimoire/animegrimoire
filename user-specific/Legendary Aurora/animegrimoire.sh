@@ -27,7 +27,7 @@ startl=$(date +%s)
 #|─────────────────────────────────────────────────────────────────────────────────────────|#
 
 #	Logging functions
-readonly l="animegrimoire_enc$(date +%d%m%H%M).log"
+readonly l="animegrimoire_hssrc$(date +%d%m%H%M).log"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>$l 2>&1
@@ -38,7 +38,7 @@ do
   if pgrep -x "HandBrakeCLI" > /dev/null
     then
       echo "HandBrakeCLI is running, retrying.."
-      sleep 60
+      sleep 600
   else
     echo "HandBrakeCLI process not found, continuing subroutine."
     break
@@ -91,10 +91,7 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0
 # Clean up. 
 rm -v *.*tf *.*TF
 rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
-mv -v "$1" ../finish_encoded
-
-# Move output files to syncthing folder
-for files in \[animegrimoire\]\ *.mp4; do mv -v "$files" ../finish_uploaded/; done
+rm -v "$1"
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
@@ -103,10 +100,12 @@ echo "This script was running for $((endl-startl)) seconds."
 telegram_chatid=-1001081862705
 telegram_key="_key_"
 telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
-message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+telegram_message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
 curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
-discord_webhook="_url_"
-discord-msg --webhook-url="$discord_webhook" --description "$message" --color "0xff0004"
-
+_webhook="_url_"
+_title="[Finished Encoding]"
+_timestamp="$USER@$HOSTNAME $(date)"
+_description="$USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$timestamp"

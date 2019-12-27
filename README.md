@@ -6,7 +6,9 @@ Animegrimoire.org preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
 This script and preset absolutely gives no warranty, no tech support, by using any stuff that included here means you already know your shit. 
 
 ## Tested in:
-1. Fedora 31 Server Minimal 64bit Installation inside ESXi environment.
+1. RHEL 8.1 Server 64bit
+2. Fedora 31 Server 64bit
+3. CentOS 8.0 Server 64bit
 
 ### Worthwhile note:
 1. Must have properly compiled handbrakecli and installs `ffmpeg`, `rename`, `rhash`.
@@ -39,7 +41,7 @@ your_encoding_folder/
 └── for_all_file_in_folder_source_do_animegrimoire_script.bat
 ```
 
-### How-to-use (SHELL):
+### How-to-use (BASH):
 
 For normal Ongoing-type occasion, use:
 
@@ -71,10 +73,6 @@ home/$USER/
       └── rclone
 ```
 
-
-### Automatic uploading via rclone
-
-See the script and uncomment it yourself, or point your rclone config on right location.
 
 #### Overall Encoding steps:
 

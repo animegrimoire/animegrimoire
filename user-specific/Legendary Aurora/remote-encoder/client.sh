@@ -1,45 +1,55 @@
 #!/bin/bash
 unset HISTFILE
-#	Logging functions
-readonly l="clientd_ecdr$(date +%d%m%H%M).log"
-exec 3>&1 4>&2
-trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>$l 2>&1
-
-## This script is purposed to reduce user-interaction during automated encoding
-## forked from animegrimoire.sh and modified with folder watcher and automatically
-## report encoded files using discord webhook.
-## Tested in Fedora 31 and CentOS 8. not recommended to run in debian-flavor as this script
+## This script is purposed to reduce user-interaction during automated encoding.
+## extended from animegrimoire.sh with folder watcher and
+##  automatically report encoded files using discord webhook.
+## ((WAITING FOR TEST IN CENTOS8)). not recommended to run in debian-flavor as this script
 ## is not POSIX compliant.
 ##
-## We will exclusively using Syncthing as file transport. if there's a donator that mind using it, 
-## remove 'pull-filter ignore redirect-gateway' inside openvpn configuration so every traffic is 
-## tunneled inside OpenVPN.
+## We will exclusively using SSHFS as file transport.
+## Important: these are main folder that used in whole encoding process
+## /home/$USER/Animegrimoire/sshfs/{horriblesubs|erairaws|other}/   as source files location  
+## /home/$USER/Animegrimoire/sshfs/finished     as encoded files location
+## /home/$USER/Animegrimoire/local/encodes      as encoding place
 ##
-## Important: there are main folder that used in whole encoding process
-## 1. /home/$USER/syncthing        : The main syncthing folder where the *.mkv source files arrive
-## 2. /home/$USER/encodes          : The main parent folder where re-encoding process occur
-## 3. /home/$USER/encodes/encoded  : Folder that hold encoded (*.mkv) files
-## 4. /home/$USER/encodes/finished : Folder that hold ([animegrimoire] Title - 00 [720p][00000000].mp4)
+##/home/$USER/Animegrimoire/local
+##                      |   └── /encodes
+##                  sshfs/                        
+##                      ├── horriblesubs             
+##                      ├── erairaws  
+##                      ├── other  
+##                      └── finished                   
 ##
-## For now we only agreed that source files from [HorribleSubs] are automated. any other sub must be
-## validated manually to make sure encoded files are perfect to avoid wasting resources
 
-## Let's get started
-# Stage 0: set any variable that will be used
-source=/home/$USER/syncthing/
-encode_folder=/home/$USER/encodes
+other=/home/$USER/Animegrimoire/sshfs/other
+erairaws=/home/$USER/Animegrimoire/sshfs/erairaws
+horriblesubs=/home/$USER/Animegrimoire/sshfs/horriblesubs
+encode_folder=/home/$USER/Animegrimoire/local/encodes
+finished_folder=/home/$USER/Animegrimoire/sshfs/finished
 
-# Stage 1: if there are any [HorribleSubs] *.mkv file exist, copy it to encodes folder
-if [ -f $source\[HorribleSubs\]\ *.mkv ]; then
-    cp -v $source\[HorribleSubs\]\ *.mkv $encode_folder
-else 
-    echo "$(date) $source\[HorribleSubs\]\ *.mkv does not exist"
+startl=$(date +%s)
+while :
+do
+if [ -f "$erairaws/*.mkv" ]; then
+	mvg -g "$erairaws/*.mkv" $encode_folder
+	for eraisrc in $encode_folder/*.mkv; do erai.sh "$eraisrc"; done
+	for eraimp4 in $encode_folder/\[animegrimoire\]\ *.mp4; do mvg -g "$eraimp4" $finished_folder; done
+elif [ -f "$horriblesubs" ]; then
+	mvg -g "$horriblesubs/*.mkv" $encode_folder
+	for hssrc in $encode_folder/*.mkv; do animegrimoire "$hssrc"; done
+	for hsmp4 in $encode_folder/\[animegrimoire\]\ *.mp4; do mvg -g "$hsmp4" $finished_folder; done
+elif [ -f "$other/*.mkv" ]; then
+	echo "Another source is available, but not included in automatic encoding"
+	_webhook="_url_"
+	_title="[Pending encodes]"
+	_timestamp="$USER@$HOSTNAME $(date)"
+	_description="Current pending for encoding."
+	_listfile="$(ls -Ss1pq --block-size=1000000 $other/ | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
+	discord-msg --webhook-url="$_webhook" --title="$_title" --description="$_description" --color="0xff0004" --text="$_listfile" --footer="$timestamp"
+	sleep 3600
+else
+	echo "Nothing to do."
+	discord-msg --webhook-url="$_webhook" --title="[Heartbeat]" --description="(!) Nothing to do, idling for next hour. I've been up for $((endl-startl)) seconds." --color="0x0080ff" --footer="$timestamp"
+	sleep 3600
 fi
-# Stage 2: if there are mkv files copied, do whole animegrimoire.sh encoding 
-if [ -f "$encode_folder/\[HorribleSubs\]\ *.mkv" ]; then
-    echo "$encode_folder/\[HorribleSubs\]\ *.mkv exist!"
-    for source_file in $encode_folder/\[HorribleSubs\]\ *.mkv; do animegrimoire.sh "$source_file"; done
-else 
-    echo "$(date) $encode_folder/\[HorribleSubs\]\ *.mkv does not exist"
-fi
+done
