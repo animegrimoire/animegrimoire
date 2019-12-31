@@ -36,6 +36,7 @@ in_files=$1
 new_title=$2
 subtitle=$(echo "$1" | cut -f 1 -d '.').ass
 preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
+finished_folder=/home/$USER/Animegrimoire/sshfs/finished
 
 ##Staging input Files
 # 1: Embed Watermark
@@ -64,17 +65,18 @@ rm -v "mod_sub.tmp"
 rm -v "$file_name_sub.mkv"
 rm -v "$file_name"
 rm -v "$subtitle"
+for files in \[animegrimoire\]\ *.mp4; do mvg -g "$files" $finished_folder; done
 
 ##Exit
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
 
 # Push notification to telegram (https://t.me/Animegrimoire)
-telegram_chatid=-1001081862705
-telegram_key="_key_"
-telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
-telegram_message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
-curl -X POST "$telegram_api&text='$message'"
+#telegram_chatid=-1001081862705
+#telegram_key="_key_"
+#telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
+#telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+#curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
 _webhook="_url_"
