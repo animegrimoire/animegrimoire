@@ -8,9 +8,9 @@ unset HISTFILE
 ##
 ## We will exclusively using SSHFS as file transport.
 ## Important: these are main folder that used in whole encoding process
-## /home/$USER/Animegrimoire/sshfs/{horriblesubs|dmonhiro|erairaws|other}/   as source files location  
-## /home/$USER/Animegrimoire/sshfs/finished     as encoded files location
-## /home/$USER/Animegrimoire/local/encodes      as encoding place
+## /home/$USER/Animegrimoire/sshfs/{horriblesubs|dmonhiro|erairaws|other}/	as source files location  
+## /home/$USER/Animegrimoire/sshfs/finished	as encoded files location
+## /home/$USER/Animegrimoire/local/encodes		as encoding place
 ##
 ##~/Animegrimoire/local
 ##			|   └── /encodes
@@ -38,9 +38,8 @@ function discord_report {
 	_title_="[Encoding started]"
 	_timestamp_="$USER@$HOSTNAME $(date)"
 	_description_="Source file(s) folder found. listing files, starting.."
-	_listfile_="$(ls -Ss1pq *.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$gween" --footer="$_timestamp_"
-	discord-msg --webhook-url="$_webhook_" --text="$_listfile_"
+	discord-msg --webhook-url="$_webhook_" --text="$(ls -Ss1pq *.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 }
 
 while :
@@ -67,7 +66,6 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 	cd $encode_folder
 	discord_report
 	for hssrc in *.mkv; do animegrimoire "$hssrc"; done
-	for hsmp4 in \[animegrimoire\]\ *.mp4; do mvg -g "$hsmp4" $finished_folder; done
 else
 	echo "$(date): File(s) not found in HorribleSubs folder. go to next sources"
 	H=0
@@ -84,7 +82,7 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 	if [ -s erai.txt ]; then
 		E=2
 		echo "$(date): erai.txt in "$erairaws" instruction is required to begin encoding"
-		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 84. delimiter(int) from erai.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
+		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 82. delimiter(int) from erai.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
 		E=3
 		echo "$(date): erai.txt instruction found. begin encoding"
@@ -94,7 +92,6 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 		cd $encode_folder
 		discord_report
 		for ersrc in \[Erai-raws\]\ *.mkv; do erai "$ersrc" $_erai_; done
-		for ersp4 in \[animegrimoire\]\ *.mp4; do mvg -g "$ersp4" $finished_folder; done
 	fi 
 else
 	echo "$(date): File(s) not found in erairaws folder. go to next sources"
@@ -111,7 +108,7 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 	if [ -s dmon.txt ]; then
 		D=2
 		echo "$(date): dmon.txt instruction in "$dmonhiro" is required to begin encoding"
-		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 111. new file name from dmon.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
+		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 108. new file name from dmon.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
 		D=3
 		echo "$(date): dmon.txt instruction found. begin encoding"
@@ -123,7 +120,6 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 		cd $encode_folder
 		discord_report
 		for dmnrc in *.mkv; do dmon "$dmnrc" $_dmon_; done
-		for dmnp4 in \[animegrimoire\]\ *.mp4; do mvg -g "$dmnp4" $finished_folder; done
 	fi 
 else
 	echo "$(date): File(s) not found in dmonhiro folder. go to next sources"
@@ -138,9 +134,8 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 	_title="[Pending encodes]"
 	_timestamp="$USER@$HOSTNAME $(date)"
 	_description="Current pending for encoding."
-	_listfile="$(ls -Ss1pq --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
-	discord-msg --webhook-url="$_webhook" --title="$_title" --description="$_description" --color="$yellw" --footer="$timestamp"
-	discord-msg --webhook-url="$_webhook_" --text="$_listfile_"
+	discord-msg --webhook-url="$_webhook_" --title="$_title" --description="$_description" --color="$yellw" --footer="$timestamp"
+	discord-msg --webhook-url="$_webhook_" --text="$(ls -Ss1pq --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 else
 	echo "$(date): File(s) in other folder not found. subroutine finished."
 	O=2

@@ -36,6 +36,7 @@ output="$(echo "$1" | cut -f 1 -d '.').mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
+finished_folder=/home/$USER/Animegrimoire/sshfs/finished
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
@@ -53,7 +54,7 @@ else
 fi
 
 # Stage 0:  Remove unnecessary attachment, keep only Video, jpn Audio, eng Subtitle
-ffmpeg -i "$input" -map 0:0 -map 0:1 -map 0:2 -c:v copy -c:a copy -c:s:2 copy -metadata:s:a:0 language=jpn "$1_trim.mkv" -y
+ffmpeg -i "$input" -map 0:0 -map 0:1 -map 0:2 -c:v copy -c:a copy -c:s:2 copy -metadata:s:s:0 language=eng -metadata:s:a:0 language=jpn "$1_trim.mkv" -y
 
 # Stage 1:  Register the newly created mkv as input and register new output file name
 mv -v "$input" "$input_tmp.mkv"
@@ -85,16 +86,17 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0
 rm -v *.*tf *.*TF
 rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
 rv -v "$input"
+for files in \[animegrimoire\]\ *.mp4; do mvg -g "$files" $finished_folder; done
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
 
 # Push notification to telegram (https://t.me/Animegrimoire)
-telegram_chatid=-1001081862705
-telegram_key="_key_"
-telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
-telegram_message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
-curl -X POST "$telegram_api&text='$message'"
+#telegram_chatid=-1001081862705
+#telegram_key="_key_"
+#telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
+#telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+#curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
 _webhook="_url_"

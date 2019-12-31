@@ -51,6 +51,7 @@ output="$(echo "$1" | cut -f 1 -d '.').mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
+finished_folder=/home/$USER/Animegrimoire/sshfs/finished
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
@@ -67,11 +68,14 @@ else
   rm -rfv namehold
 fi
 
-# Stage 1:	Extract Subtitle from $1(mkv)
-/usr/bin/ffmpeg -i "$input" -map 0:s "$subtitle" -y
+# Stage 0:  Overwrite metadata from file sources
+/usr/bin/ffmpeg -i "$input" -map 0:0 -map 0:1 -map 0:2 -c:v copy -c:a copy -c:s:2 copy -metadata:s:a:0 language=jpn -metadata:s:s:0 language=eng "$1_meta.mkv" -y
+
+# Stage 1:	Extract Subtitle from $1_meta(mkv)
+/usr/bin/ffmpeg -i "$1_meta.mkv" -map 0:s "$subtitle" -y
 
 # Stage 2:	demux $1(mkv), remove original subtitle
-/usr/bin/ffmpeg -i "$input" -map 0 -map 0:s -codec copy "$1_tmp.mkv" -y
+/usr/bin/ffmpeg -i "$1_meta.mkv" -map 0 -map 0:s -codec copy "$1_tmp.mkv" -y
 
 # Stage 3:	embed watermark to comply animegrimoire's global rule
 sed '/Format\: Name/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "modified_sub.tmp1"
@@ -90,18 +94,19 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0
 
 # Clean up. 
 rm -v *.*tf *.*TF
-rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"
+rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"; rm -v "$1_meta.mkv"
 rm -v "$1"
+for files in \[animegrimoire\]\ *.mp4; do mvg -g "$files" $finished_folder; done
 
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
 
 # Push notification to telegram (https://t.me/Animegrimoire)
-telegram_chatid=-1001081862705
-telegram_key="_key_"
-telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
-telegram_message="[Notice] $HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
-curl -X POST "$telegram_api&text='$message'"
+#telegram_chatid=-1001081862705
+#telegram_key="_key_"
+#telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
+#telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+#curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
 _webhook="_url_"
