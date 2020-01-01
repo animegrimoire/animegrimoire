@@ -27,7 +27,7 @@ dmonhiro=/home/$USER/Animegrimoire/sshfs/dmonhiro/
 horriblesubs=/home/$USER/Animegrimoire/sshfs/horriblesubs/
 encode_folder=/home/$USER/Animegrimoire/local/encodes/
 finished_folder=/home/$USER/Animegrimoire/sshfs/finished
-_webhook_="$(printf ~/.webhook_client)"
+_webhook_="$(cat ~/.webhook_client)"
 #Color
 yellw=0xfae701
 gween=0x00ffbc

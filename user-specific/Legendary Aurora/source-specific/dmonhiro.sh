@@ -79,7 +79,7 @@ echo "This script was running for $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
-_webhook="$(printf ~/.webhook)"
+_webhook="$(cat ~/.webhook)"
 _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
 _description="$USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
