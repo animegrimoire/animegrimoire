@@ -59,9 +59,3 @@ This document is published for transparency report, we are not going to hide the
 >  *Once upon a time there's a fool that loves quick download stuff for free and simply be happy while watching it. I were once *that* fool. Now we are returning the favor to make anyone else to be happy like we once did. May our time is well-spent, may our money is used for better progression and everyone is happy.* *-* [*libev10.*](https://t.me/libev10)
 
 *Keeper*@[*discord*](https://discord.gg/HubPERS)
-======
-- *リンベル#3988 (Keeper0)*
-- *Borealis#7092*
-- *Celestia Kameraad#0533*
-- *Internet Explorer#2302*
-- *kaily.py#6392*
