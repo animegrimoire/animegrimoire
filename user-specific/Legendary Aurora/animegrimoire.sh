@@ -103,14 +103,14 @@ echo "This script was running for $((endl-startl)) seconds."
 
 # Push notification to telegram (https://t.me/Animegrimoire)
 #telegram_chatid=-1001081862705
-#telegram_key="_key_"
+#telegram_key="$(printf ~/.telegram)"
 #telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
 #telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
-_webhook="_url_"
+_webhook="$(printf ~/.webhook)"
 _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
 _description="$USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
-discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$timestamp"
+discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
