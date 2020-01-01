@@ -18,6 +18,7 @@ tar -uvf backup.tar ~/.local/preset
     cd ~/.local/bin
     rm -rfv mvg
     curl -o mvg https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/precompiled-binary/mvg
+    chmod u+x mvg
     rm -rfv discord-msg
     curl -o discord-msg https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh
     chmod u+x discord-msg
@@ -41,7 +42,10 @@ tar -uvf backup.tar ~/.local/preset
     cd ~/.local/bin
     chmod -R u+x *.sh
     ls -lS
+    cd ~/.local/preset
+    ls -lS
     cd ~
-
+    
+endl=$(date +%s)
 echo "Scripts update completed in $((endl-startl)) seconds."
 echo "Make sure to double check your credentials (webhook, keys) before running any scripts"
