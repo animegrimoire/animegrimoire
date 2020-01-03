@@ -35,7 +35,7 @@ done
 in_files=$1
 new_title=$2
 subtitle=$(echo "$1" | cut -f 1 -d '.').ass
-preset="/home/aurora/.local/preset/x264_Animegrimoire.json"
+preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
 finished_folder=/home/$USER/Animegrimoire/sshfs/finished
 
 ##Staging input Files
@@ -47,7 +47,7 @@ file_name="[animegrimoire] "$2" - $(echo "$1" | cut -f 1 -d ' ') [BD720p].mkv"
 /usr/bin/mv -v "$1" "$file_name"
 # 3: Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$file_name" -y
-for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/aurora/.fonts; done
+for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/$USER/.fonts; done
 fc-cache -f -v
 
 ##Staging HandBrakeCLI

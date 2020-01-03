@@ -37,6 +37,7 @@ case $action in
 	tar -uvf backup.tar /etc/pihole/setupVars.conf
 	tar -uvf backup.tar /etc/pihole/whitelist.txt
 	tar -uvf backup.tar /etc/dnsmasq.d/01-pihole.conf
+	tar -uvf backup.tar /etc/sudoers.d/user-shutdown
 	;;
 
 	[2] )
