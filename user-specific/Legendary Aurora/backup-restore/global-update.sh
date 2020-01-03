@@ -37,14 +37,12 @@ tar -uvf backup.tar ~/.local/preset
 # Stage 5: pull server/client scripts
     curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/server.sh
     curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/client.sh
+    curl -o power-cycle.sh ttps://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/power-cycle.sh
 
 # Stage 6: enable u+x
-    cd ~/.local/bin
-    chmod -R u+x *.sh
-    ls -lS
-    cd ~/.local/preset
-    ls -lS
     cd ~
+    chmod -R u+x ~/.local/bin/*.sh
+    ls -lS ~/.local/bin && ls -lS ~/.local/preset
     
 endl=$(date +%s)
 echo "Scripts update completed in $((endl-startl)) seconds."
