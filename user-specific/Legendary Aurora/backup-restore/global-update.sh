@@ -37,7 +37,7 @@ tar -uvf backup.tar ~/.local/preset
 # Stage 5: pull server/client scripts
     curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/server.sh
     curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/client.sh
-    curl -o power-cycle.sh ttps://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/power-cycle.sh
+    curl -o power-cycle.sh https://gitlab.com/initramfs-0/animegrimoire/raw/master/user-specific/Legendary%20Aurora/remote-encoder/power-cycle.sh
 
 # Stage 6: enable u+x
     cd ~

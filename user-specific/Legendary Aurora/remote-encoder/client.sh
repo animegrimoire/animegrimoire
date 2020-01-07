@@ -3,7 +3,7 @@ unset HISTFILE
 ## This script is purposed to reduce user-interaction during automated encoding.
 ## extended from animegrimoire.sh with folder watcher and
 ##  automatically report encoded files using discord webhook.
-## ((WAITING FOR TEST IN CENTOS8)). not recommended to run in debian-flavor as this script
+## Tested in CentOS8. not recommended to run in debian-flavor as this script
 ## is not POSIX compliant.
 ##
 ## We will exclusively using SSHFS as file transport.
@@ -37,7 +37,7 @@ uwus=0xfd0093
 function discord_report {
 	_title_="[Encoding started]"
 	_timestamp_="$USER@$HOSTNAME $(date)"
-	_description_="Source file(s) folder found. listing files, starting.."
+	_description_="Source file(s) or folder found. listing files, starting.."
 	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$gween" --footer="$_timestamp_"
 	discord-msg --webhook-url="$_webhook_" --text="$(ls -Ss1pq *.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 }
