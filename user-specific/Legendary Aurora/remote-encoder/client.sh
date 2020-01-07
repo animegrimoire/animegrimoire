@@ -65,7 +65,7 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 	mvg -g *.mkv $encode_folder
 	cd $encode_folder
 	discord_report
-	for hssrc in *.mkv; do animegrimoire "$hssrc"; done
+	for hssrc in *.mkv; do animegrimoire.sh "$hssrc"; done
 else
 	echo "$(date): File(s) not found in HorribleSubs folder. go to next sources"
 	H=0
@@ -91,7 +91,7 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 		mvg -g *.mkv $encode_folder
 		cd $encode_folder
 		discord_report
-		for ersrc in \[Erai-raws\]\ *.mkv; do erai "$ersrc" $_erai_; done
+		for ersrc in \[Erai-raws\]\ *.mkv; do erai.sh "$ersrc" $_erai_; done
 	fi 
 else
 	echo "$(date): File(s) not found in erairaws folder. go to next sources"
@@ -119,7 +119,7 @@ if [ `ls -1 *.mkv 2>/dev/null | wc -l ` -gt 0 ]; then
 		mvg -g *.ass $encode_folder
 		cd $encode_folder
 		discord_report
-		for dmnrc in *.mkv; do dmon "$dmnrc" $_dmon_; done
+		for dmnrc in *.mkv; do dmon.sh "$dmnrc" $_dmon_; done
 	fi 
 else
 	echo "$(date): File(s) not found in dmonhiro folder. go to next sources"
