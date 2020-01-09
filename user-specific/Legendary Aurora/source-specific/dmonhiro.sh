@@ -36,7 +36,9 @@ in_files=$1
 new_title=$2
 subtitle=$(echo "$1" | cut -f 1 -d '.').ass
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
-finished_folder=/home/$USER/Animegrimoire/sshfs/finished
+finished_folder_local=/home/$USER/temp
+finished_folder_remote="kvm:/home/'REMOTE_USER'/sshfsd/finished"
+finished_folder_rclone="temp:"
 
 ##Staging input Files
 # 1: Embed Watermark
@@ -65,7 +67,11 @@ rm -v "mod_sub.tmp"
 rm -v "$file_name_sub.mkv"
 rm -v "$file_name"
 rm -v "$subtitle"
-for files in \[animegrimoire\]\ *.mp4; do mvg -g "$files" $finished_folder; done
+
+# Move completed files
+for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" $finished_folder_rclone; done
+for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" $finished_folder_remote; done
+for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" $finished_folder_local; done
 
 ##Exit
 endl=$(date +%s)
@@ -73,7 +79,7 @@ echo "This script was running for $((endl-startl)) seconds."
 
 # Push notification to telegram (https://t.me/Animegrimoire)
 #telegram_chatid=-1001081862705
-#telegram_key="$(printf ~/.telegram)"
+#telegram_key="$(cat ~/.telegram)"
 #telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
 #telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
