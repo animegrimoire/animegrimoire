@@ -148,7 +148,7 @@ fi
 	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
 	sleep 3600
 	echo "$(date): Remounting sshfs folder"
-	sudo /usr/bin/umount Animegrimoire/sshfs/
+	sudo /usr/bin/umount /home/$USER/Animegrimoire/sshfs
 	~/.local/bin/ssfsd-mount
 	echo "$(date): Return to beginning"
 done
