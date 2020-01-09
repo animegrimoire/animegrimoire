@@ -2,7 +2,7 @@
 unset HISTFILE
 ## This script is purposed to reduce user-interaction during automated encoding.
 ## extended from animegrimoire.sh with folder watcher and
-##  automatically report encoded files using discord webhook.
+## automatically report encoded files using discord webhook.
 ## Tested in CentOS8. not recommended to run in debian-flavor as this script
 ## is not POSIX compliant.
 ##
@@ -144,7 +144,7 @@ fi
 # Stage 5: report a heartbeat then sleep before going back to loop
 	_title_="[Heartbeat]"
 	_timestamp_="AVX-chan@$HOSTNAME $(date)"
-	_description_="Subroutine finished with code $H$E$D$O. Sleeping for next 1800s"
+	_description_="Subroutine finished with code $H$E$D$O. Sleeping for next 3600s"
 	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
 	sleep 3600
 	echo "$(date): Remounting sshfs folder"
