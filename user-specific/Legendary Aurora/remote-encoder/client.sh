@@ -146,6 +146,9 @@ fi
 	_timestamp_="AVX-chan@$HOSTNAME $(date)"
 	_description_="Subroutine finished with code $H$E$D$O. Sleeping for next 1800s"
 	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
-	sleep 1800
+	sleep 3600
+	echo "$(date): Remounting sshfs folder"
+	sudo /usr/bin/umount Animegrimoire/sshfs/
+	~/.local/bin/ssfsd-mount
 	echo "$(date): Return to beginning"
 done
