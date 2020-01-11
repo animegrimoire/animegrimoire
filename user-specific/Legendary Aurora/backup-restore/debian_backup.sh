@@ -19,6 +19,7 @@ case $action in
 	[1] )
 	tar -cvf backup.tar /home/?USER/.scripts
 	tar -uvf backup.tar /home/?USER/.ssh
+	tar -uvf backup.tar /home/?USER/.fonts
 	tar -uvf backup.tar /home/?USER/.config/deluge
 	tar -uvf backup.tar /home/?USER/.config/rclone
 	tar -uvf backup.tar /home/?USER/<?path_to_rss_relay> --exclude=/<?exclude_dir>
@@ -44,9 +45,9 @@ case $action in
 
 	[2] )
 	if [ -f "backup.tar" ]; then
-		echo 'backup found, restoring.. ' 
+		echo 'backup found, restoring.. '
 		sudo tar -xvf backup.tar
-	else 
+	else
 		echo "backup does not exist. input your 'backup.tar' in absolute path:"
 		read -p 'archive location: ' custom_archive
 		sudo tar -xvf $custom_archive
