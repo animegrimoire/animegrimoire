@@ -30,7 +30,7 @@ startl=$(date +%s)
 readonly l="animegrimoire_hssrc$(date +%d%m%H%M).log"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>$l 2>&1
+exec 1>"$l" 2>&1
 
 # Make sure HandBrakeCLI isn't running. this is a one core single thread machine
 while :
@@ -49,24 +49,24 @@ done
 input=$1
 output="$(echo "$1" | cut -f 1 -d '.').mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
-fansub="$(echo $1 | cut -d "[" -f2 | cut -d "]" -f1)"
+fansub="$(echo "$1" | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
 finished_folder_local=/home/$USER/temp
-finished_folder_remote="kvm:/home/'REMOTE_USER'/sshfsd/finished"
-finished_folder_rclone="temp:"
+finished_folder_remote=kvm:/home/'REMOTE_USER'/sshfsd/finished
+finished_folder_rclone=temp:
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
-for fonts in *.*TF *.*tf; do rclone -vv copy $fonts /home/$USER/.fonts; done
+for fonts in *.*TF *.*tf; do rclone -vv copy "$fonts" /home/"$USER"/.fonts; done
 fc-cache -f -v
 
 # Remove CRC32 value from input files
 if [[ -z "$2" ]]; then
     :
 else
-  echo "$input" | cut -b 1-$2 > namehold
+  echo "$input" | cut -b 1-"$2" > namehold
   mv "$input" "$(cat namehold)".mkv
-  input=$(printf "$(cat namehold)".mkv)
+  input="$(cat namehold).mkv)"
   rm -rfv namehold
 fi
 
@@ -88,21 +88,21 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:02.00,Watermark,,0000,0000,0
 
 # Stage 5:	send subbed $1 to HandBrakeCLI encoder with animegrimoire's preset.
 #			Make sure you have compiled fdk_aac version as stated in guide thread.
-/usr/local/bin/HandBrakeCLI --preset-import-file $preset -Z "x264_Animegrimoire" -i "$1_sub.mkv" -o "$output"
+/usr/local/bin/HandBrakeCLI --preset-import-file "$preset" -Z "x264_Animegrimoire" -i "$1_sub.mkv" -o "$output"
 
 # Stage 6:	Rename file names and embed CRC32 in end of encoded file (case sensitive).
-/usr/bin/rename -v $fansub animegrimoire "$output" > hold.name
+/usr/bin/rename -v "$fansub" animegrimoire "$output" > hold.name
 /usr/bin/rhash --embed-crc --embed-crc-delimiter='' "$(cat hold.name | cut -d "\`" -f3 | cut -d "'" -f 1)" && rm -v hold.name
 
-# Clean up. 
-rm -v *.*tf *.*TF
-rm -v *.tmp* ; rm -v *.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"; rm -v "$1_meta.mkv"
+# Clean up.
+rm -v ./*.*tf ./*.*TF
+rm -v ./*.tmp* ; rm -v ./*.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"; rm -v "$1_meta.mkv"
 rm -v "$1"
 
 # Move completed files
-for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" $finished_folder_rclone; done
-for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" $finished_folder_remote; done
-for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" $finished_folder_local; done
+for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" "$finished_folder_rclone"; done
+for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" "$finished_folder_remote"; done
+for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
 
 ## Exit
 endl=$(date +%s)
@@ -116,8 +116,8 @@ echo "This script was running for $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
-_webhook="$(cat ~/.webhook)"
+_webhook="$(cat ~/.webhook_avx)"
 _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
-_description="$USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
+_description="$USER@$HOSTNAME has successfully re-encode $1 in $((endl-startl)) seconds."
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
