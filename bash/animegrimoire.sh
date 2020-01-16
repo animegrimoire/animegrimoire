@@ -26,11 +26,14 @@ else
   rm namehold
 fi
 
-# Stage 1:	Extract Subtitle from $1(mkv)
-/usr/bin/ffmpeg -i "$input" -map 0:s "$subtitle" -y
+# Stage 0:  Overwrite metadata from file sources
+/usr/bin/ffmpeg -i "$input" -map 0:0 -map 0:1 -map 0:2 -c:v copy -c:a copy -c:s:2 copy -metadata:s:a:0 language=jpn -metadata:s:s:0 language=eng "$1_meta.mkv" -y
+
+# Stage 1:	Extract Subtitle from $1_meta(mkv)
+/usr/bin/ffmpeg -i "$1_meta.mkv" -map 0:s "$subtitle" -y
 
 # Stage 2:	demux $1(mkv), remove original subtitle
-/usr/bin/ffmpeg -i "$input" -map 0 -map 0:s -codec copy "$1_tmp.mkv" -y
+/usr/bin/ffmpeg -i "$1_meta.mkv" -map 0 -map 0:s -codec copy "$1_tmp.mkv" -y
 
 # Stage 3:	embed watermark to comply animegrimoire's global rule
 sed '/Style\: Default/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "modified_sub.tmp1"
