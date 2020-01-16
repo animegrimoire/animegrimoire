@@ -1,5 +1,4 @@
 #!/bin/bash
-unset HISTFILE
 ## This script is purposed to reduce user-interaction during automated encoding.
 ## extended from animegrimoire.sh with folder watcher and
 ## automatically report encoded files using discord webhook.
