@@ -41,6 +41,7 @@ case $action in
 	tar -uvf backup.tar /etc/sudoers.d/user-shutdown
 	tar -uvf backup.tar /etc/sudoers.d/user-mount
 	tar -uvf backup.tar /etc/sudoers.d/user-umount
+	tar -uvf backup.tar /etc/rsyncd.conf
 	;;
 
 	[2] )

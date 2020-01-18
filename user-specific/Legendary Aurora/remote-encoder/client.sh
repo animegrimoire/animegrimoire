@@ -20,11 +20,16 @@
 ##				├── other
 ##				└── finished
 ##
+
+REMOTE_HOST=""
 other=/home/$USER/Animegrimoire/sshfs/other/
 erairaws=/home/$USER/Animegrimoire/sshfs/erairaws/
 dmonhiro=/home/$USER/Animegrimoire/sshfs/dmonhiro/
 horriblesubs=/home/$USER/Animegrimoire/sshfs/horriblesubs/
 encode_folder=/home/$USER/Animegrimoire/local/encodes/
+remote_hs=sources/horriblesubs
+remote_erai=sources/erairaws
+remote_dmon=sources/dmonhiro
 _webhook_="$(cat ~/.webhook_avx)"
 #Color
 yellw=0xfae701
@@ -60,7 +65,7 @@ cd "$horriblesubs" || exit
 if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	H=1
 	echo "$(date): File(s) found in HorribleSubs folder. begin encoding"
-	mvg -g ./*.mkv "$encode_folder"
+	rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_hs"/*.mkv "$encode_folder"
 	cd "$encode_folder" || exit
 	discord_report
 	for hssrc in *.mkv; do animegrimoire.sh "$hssrc"; done
@@ -86,7 +91,7 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 		echo "$(date): erai.txt instruction found. begin encoding"
 		_erai_=$(cat erai.txt)
 		echo erai delimiter is "$_erai_"
-		mvg -g ./*.mkv "$encode_folder"
+		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_erai"/*.mkv "$encode_folder"
 		cd "$encode_folder" || exit
 		discord_report
 		for ersrc in \[Erai-raws\]\ *.mkv; do erairaws.sh "$ersrc" "$_erai_"; done
@@ -114,8 +119,8 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 		_dmon_=$(cat dmon.txt)
 		echo dmon new file name is "$_dmon_"
 		cd "$dmonhiro" || exit
-		mvg -g ./*.mkv "$encode_folder"
-		mvg -g ./*.ass "$encode_folder"
+		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.mkv "$encode_folder"
+		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.ass "$encode_folder"
 		cd "$encode_folder" || exit
 		discord_report
 		for dmnrc in *.mkv; do dmonhiro.sh "$dmnrc" "$_dmon_"; done

@@ -38,7 +38,7 @@ fansub="$(echo "$1" | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
 finished_folder_local=/home/$USER/temp
 finished_folder_remote=kvm:/home/'REMOTE_USER'/sshfsd/finished
-finished_folder_rclone=temp:
+finished_folder_rclone=temp:temp
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
