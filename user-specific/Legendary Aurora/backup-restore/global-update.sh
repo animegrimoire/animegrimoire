@@ -1,7 +1,6 @@
 #!/bin/bash
 clear
-
-branch=master
+branch=$(cat ~/.animegrimoire_branch)
 
 startl=$(date +%s)
 ping -q -w 1 -c 1 10.8.0.1 > /dev/null && echo "$(date +%d%m%y): Gateway online, starting update." || exit
@@ -46,6 +45,7 @@ tar -uvf backup.tar ~/.local/preset
     curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/server.sh
     curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/client.sh
     curl -o power-cycle.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/power-cycle.sh
+    curl -o mirror.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/mirror.sh
 
 # Stage 6: enable u+x
     cd ~ || exit
