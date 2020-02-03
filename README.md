@@ -1,5 +1,5 @@
 # Animegrimoire HandBrakeCLI
-Forum home thread: [>>/animegrimoire/tavern/1119](https://animegrimoire.org/showthread.php?tid=1119)
+Forum home thread: [>>/animegrimoire/tavern/1119](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119)
 
 Animegrimoire.org preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
 
