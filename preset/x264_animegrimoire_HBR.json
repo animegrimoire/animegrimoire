@@ -11,7 +11,7 @@
             ],
             "AudioList": [
                 {
-                    "AudioBitrate": 32,
+                    "AudioBitrate": 128,
                     "AudioCompressionLevel": -1.0,
                     "AudioDitherMethod": "auto",
                     "AudioEncoder": "fdk_haac",
