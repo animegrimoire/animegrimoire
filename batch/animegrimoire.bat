@@ -28,7 +28,6 @@ set ffmpeg=.\lib\ffmpeg
 set preset=.\lib\x264_animegrimoire.json
 set handbrakeCLI=.\lib\HandBrakeCLI
 
-
 REM ADD DIRECTORY FOR OUTPUT
 if not exist .\temp mkdir .\temp
 if not exist .\watermarked mkdir .\watermarked
@@ -45,7 +44,7 @@ REM add watermark, using powershell
 @powershell -Command "get-content .\temp\%subtitleTemp%01.ass | %%{$_ -replace \"%line2find%\",\"%line2find%`r`n%watermarkText%\"}" >> .\temp\%subtitleTemp%02.ass
 
 REM send back watermark to mkv
-%ffmpeg% -i .\temp\%videoNoSubtitle%.mkv  -i .\temp\%subtitleTemp%02.ass -c:v copy -c:a copy -c:s copy -map 0:0 -map 0:1 -map 1:0 -metadata:s:s:0 language=eng ".\watermarked\%watermarkedFilename%.mkv" -y
+%ffmpeg% -i .\temp\%videoNoSubtitle%.mkv  -i .\temp\%subtitleTemp%02.ass -c:v copy -c:a copy -c:s copy -map 0:0 -map 0:1 -map 1:0 -metadata:s:a:0 language=jpn -metadata:s:s:0 language=eng ".\watermarked\%watermarkedFilename%.mkv" -y
 
 REM encode file
 %handbrakeCLI% --preset-import-file %preset% -Z "x264_Animegrimoire" -i ".\watermarked\%watermarkedFilename%.mkv" -o ".\encoded\%watermarkedFilename%.mp4"
@@ -55,4 +54,4 @@ del .\temp\%subtitle%.ass
 del .\temp\%subtitleTemp%01.ass
 del .\temp\%subtitleTemp%02.ass
 del .\temp\%videoNoSubtitle%.mkv
-del %fullpath
+del %fullpath%
