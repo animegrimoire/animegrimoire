@@ -1,44 +1,72 @@
-# Animegrimoire HandBrakeCLI
-Forum home thread: [>>/animegrimoire/tavern/1119](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119)
+<div align="center">
+<a href="https://animegrimoire.station.moe">
+<img src="https://i.ibb.co/zhkrxtV/Grimoire-Archive.png" alt="animegrimoire.station.moe" height="200" width="200"</img>
+</a><br>Grimoire Archive
+</div>
 
-Animegrimoire.org preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
+Home: [https://animegrimoire.station.moe](https://animegrimoire.station.moe)
 
-This script and preset absolutely gives no warranty, no tech support, by using any stuff that included here means you already know your shit. 
+Old Home: [Web Archive](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119)
+
+Animegrimoire preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
+
+**This script and preset absolutely gives no warranty, no tech support, by using any stuff that included here means you already know your shit.**
 
 ## Tested in:
 1. RHEL 8.1 Server 64bit
-2. Fedora 31 Server 64bit
-3. CentOS 8.0 Server 64bit
+2. Windows 10 LTSC 1809 64bit
 
 ### Worthwhile note:
-1. Must have properly compiled handbrakecli and installs `ffmpeg`, `rename`, `rhash`.
+1. Must have properly compiled handbrakecli and install `ffmpeg`, `rename`, `rhash`.
 2. [Compile](https://handbrake.fr/docs/en/latest/developer/build-linux.html) HandBrake with fdk-aac.
 ```
 $ ./configure --enable-fdk-aac --disable-gtk --launch-jobs=$(nproc) --launch
 ```
 3. Put this script inside `for` loop, or inside torrent's client `do something after files finished downloading`
 4. Logging function is generally nice to have but it's disabled by default
+5. Visit home if you want to download our encoder [releases](https://animegrimoire.station.moe/encoder/)
 
 ### How-to-use (BATCH):
-1. to run single file
 
-`animegrimoire.bat ".\source\file that you wanted to encode [01].mkv"`
-
-2. For all file in folder
-Use `for_all_file_in_folder_source_do_animegrimoire_script.bat` script.
+Double click `launch_encoder.bat`
 
 ### This is the structure of the file and folder in Batch version:
 ```
-your_encoding_folder/
-├── lib/
-│   ├── ffmpeg.exe
-│   ├── HandBrakeCLI.exe
-│   └── x264_animegrimoire.json
-├── source/
-│   ├── file that you wanted to encode [01].mkv
-│   └── [fansub] file that you wanted to encode - 02.mkv
-├── animegrimoire.bat
-└── for_all_file_in_folder_source_do_animegrimoire_script.bat
+Encoding/
+├── encoded_mp4
+├── extract_font.bat
+├── finished
+├── fonts
+├── launch_encoder.bat
+├── launch_renamer.bat
+├── lib
+│   ├── animegrimoire.bat
+│   ├── etc
+│   │   ├── preset
+│   │   │   ├── x264_animegrimoire_HBR.json
+│   │   │   └── x264_animegrimoire.json
+│   │   ├── renamer
+│   │   ├── sample
+│   │   │   └── [HorribleSubs] Fumikiri Jikan - 01 [720p].mkv
+│   │   ├── tools
+│   │   │   ├── help.txt
+│   │   │   ├── Take Ownership install.reg
+│   │   │   └── Take Ownership uninstall.reg
+│   │   ├── tutorial
+│   │   │   ├── animegrimoire-handbrakecli-emelie-tutorial.mp4
+│   │   │   ├── Animegrimoire-Handbrake GUI.png
+│   │   │   └── what files are these.png
+│   │   └── watermark-fonts
+│   │       └── Worstveld.otf
+│   ├── ffmpeg.exe
+│   ├── fonts.bat
+│   ├── HandBrakeCLI.exe
+│   ├── hb.dll
+│   └── x264_animegrimoire.json
+├── source
+├── temp
+└── watermarked
+
 ```
 
 ### How-to-use (BASH):
