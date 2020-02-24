@@ -7,6 +7,10 @@ ping -q -w 1 -c 1 10.8.0.1 > /dev/null && echo "$(date +%d%m%y): Gateway online,
 
 # Stage 0: Backup everything just in case
 cd ~ || exit
+mkdir -p /home/"$USER"/.fonts
+mkdir -p /home/"$USER"/.local/preset
+mkdir -p /home/"$USER"/.local/bin
+
 tar -cvf backup.tar ~/.local/bin
 tar -uvf backup.tar ~/.local/preset
 
@@ -19,34 +23,37 @@ tar -uvf backup.tar ~/.local/preset
 # Stage 2: pull precompiled binary (if any).
     cd ~/.local/bin || exit
     rm -rfv mvg
-    curl -o mvg https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/precompiled-binary/mvg
+    curl -o mvg https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/mvg
     chmod u+x mvg
     rm -rfv discord-msg
     curl -o discord-msg https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh
     chmod u+x discord-msg
     cd ~/.fonts || exit
-    rm -rfv cambriai.ttf
+    rm -rfv Worstveld.otf
     rm -rfv OpenSans-Semibold.ttf
-    curl -o cambriai.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/precompiled-binary/cambriai.ttf
-    curl -o OpenSans-Semibold.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/precompiled-binary/OpenSans-Semibold.ttf
+    curl -o cambriai.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/Worstveld.otf
+    curl -o OpenSans-Semibold.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/OpenSans-Semibold.ttf
 
 # Stage 3: pull housekeeping script
+    cd ~/.local/bin || exit
     rm -rfv ./*.sh
-    curl -o global-update.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/backup-restore/global-update.sh
-    curl -o debian-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/backup-restore/debian_backup.sh
-    curl -o fedora-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/backup-restore/fedora_backup.sh
+    curl -o global-update.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/global-update.sh
+    curl -o debian-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/debian_backup.sh
+    curl -o fedora-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/fedora_backup.sh
 
 # Stage 4: pull encoding scripts
-    curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/animegrimoire.sh
-    curl -o erairaws.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/source-specific/erairaws.sh
-    curl -o dmonhiro.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/source-specific/dmonhiro.sh
+    curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire.sh
+    curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire-HBR.sh
+    curl -o erairaws.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/erairaws.sh
+    curl -o dmonhiro.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/dmonhiro.sh
 
 # Stage 5: pull server/client scripts
-    curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/server.sh
-    curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/client.sh
-    curl -o power-cycle.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/power-cycle.sh
-    curl -o mirror.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/user-specific/Legendary%20Aurora/remote-encoder/mirror.sh
-
+    curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/server.sh
+    curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/client.sh
+    curl -o mirror.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/mirror.sh
+    curl -o install.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/install.sh
+    curl -o power-cycle.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/power-cycle.sh
+    
 # Stage 6: enable u+x
     cd ~ || exit
     chmod -R u+x ~/.local/bin/*.sh
