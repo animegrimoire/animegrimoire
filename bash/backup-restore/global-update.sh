@@ -31,7 +31,7 @@ tar -uvf backup.tar ~/.local/preset
     cd ~/.fonts || exit
     rm -rfv Worstveld.otf
     rm -rfv OpenSans-Semibold.ttf
-    curl -o cambriai.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/Worstveld.otf
+    curl -o Worstveld.otf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/Worstveld.otf
     curl -o OpenSans-Semibold.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/OpenSans-Semibold.ttf
 
 # Stage 3: pull housekeeping script
@@ -43,17 +43,17 @@ tar -uvf backup.tar ~/.local/preset
 
 # Stage 4: pull encoding scripts
     curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire.sh
-    curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire-HBR.sh
     curl -o erairaws.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/erairaws.sh
     curl -o dmonhiro.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/dmonhiro.sh
-
+    curl -o animegrimoire-HBR.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire-HBR.sh
+    
 # Stage 5: pull server/client scripts
     curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/server.sh
     curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/client.sh
     curl -o mirror.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/mirror.sh
     curl -o install.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/install.sh
     curl -o power-cycle.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/power-cycle.sh
-    
+
 # Stage 6: enable u+x
     cd ~ || exit
     chmod -R u+x ~/.local/bin/*.sh
