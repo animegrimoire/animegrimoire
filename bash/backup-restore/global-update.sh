@@ -8,8 +8,8 @@ ping -q -w 1 -c 1 10.8.0.1 > /dev/null && echo "$(date +%d%m%y): Gateway online,
 # Stage 0: Backup everything just in case
 cd ~ || exit
 mkdir -p /home/"$USER"/.fonts
-mkdir -p /home/"$USER"/.local/preset
 mkdir -p /home/"$USER"/.local/bin
+mkdir -p /home/"$USER"/.local/preset
 
 tar -cvf backup.tar ~/.local/bin
 tar -uvf backup.tar ~/.local/preset
@@ -23,30 +23,31 @@ tar -uvf backup.tar ~/.local/preset
 # Stage 2: pull precompiled binary (if any).
     cd ~/.local/bin || exit
     rm -rfv mvg
+    rm -rfv cpg
     curl -o mvg https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/mvg
+    curl -o mvg https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/cpg
     chmod u+x mvg
+    chmod u+x cvg
     rm -rfv discord-msg
     curl -o discord-msg https://raw.githubusercontent.com/ChaoticWeg/discord.sh/master/discord.sh
     chmod u+x discord-msg
     cd ~/.fonts || exit
     rm -rfv Worstveld.otf
-    rm -rfv OpenSans-Semibold.ttf
     curl -o Worstveld.otf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/Worstveld.otf
-    curl -o OpenSans-Semibold.ttf https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/precompiled-binary/OpenSans-Semibold.ttf
 
 # Stage 3: pull housekeeping script
     cd ~/.local/bin || exit
     rm -rfv ./*.sh
+    curl -o fedora-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/backup.sh
     curl -o global-update.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/global-update.sh
     curl -o debian-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/debian_backup.sh
-    curl -o fedora-backup.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/backup-restore/fedora_backup.sh
 
 # Stage 4: pull encoding scripts
     curl -o animegrimoire.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire.sh
     curl -o erairaws.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/erairaws.sh
     curl -o dmonhiro.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/source-specific/dmonhiro.sh
     curl -o animegrimoire-HBR.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/animegrimoire-HBR.sh
-    
+
 # Stage 5: pull server/client scripts
     curl -o server.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/server.sh
     curl -o client.sh https://gitlab.com/initramfs-0/animegrimoire/raw/"$branch"/bash/remote-encoder/client.sh

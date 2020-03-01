@@ -4,6 +4,7 @@ mkdir -p /home/"$USER"/.fonts
 mkdir -p /home/"$USER"/.local/bin
 mkdir -p /home/"$USER"/.local/preset
 mkdir -p /home/"$USER"/Animegrimoire/sshfs
+touch /home/"$USER"/.user_key
 touch /home/"$USER"/.webhook_avx
 touch /home/"$USER"/.animegrimoire_branch
 
