@@ -1,10 +1,10 @@
 <div align="center">
 <a href="https://animegrimoire.station.moe">
 <img src="https://i.ibb.co/zhkrxtV/Grimoire-Archive.png" alt="animegrimoire.station.moe" height="200" width="200"</img>
-</a><br>Grimoire Archive
+</a>
 </div>
 
-Home: [https://animegrimoire.station.moe](https://animegrimoire.station.moe)
+Home: WIP: [https://animegrimoire.station.moe](https://animegrimoire.station.moe)
 
 Old Home: [Web Archive](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119)
 
