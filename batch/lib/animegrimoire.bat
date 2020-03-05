@@ -13,7 +13,7 @@ set videoNoSubtitle=%underscoreFilename%_no_sub
 
 REM WATERMARK
 set watermarkStyle=Style: Watermark,Worstveld Sling,20,^^^&H00FFFFFF,^^^&H00FFFFFF,^^^&H00FFFFFF,^^^&H00FFFFFF,0,0,0,0,100,100,0,0,1,0,0,9,0,5,0,1
-set watermarkText=Dialogue: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0000,,animegrimoire.station.moe
+set watermarkText=Dialogue: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0000,,animegrimoire.org
 
 REM FOR SEARCHING LINE IN TEXT
 set line1find=Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
