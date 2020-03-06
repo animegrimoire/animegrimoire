@@ -1,3 +1,3 @@
 # Documentations
-1. [[doc]](https://gitlab.com/initramfs-0/animegrimoire) How to pair my syncthing to animegrimoire
-2. [[doc]](https://gitlab.com/initramfs-0/animegrimoire) How Syncthing works
+1. [[Doc]](https://gitlab.com/initramfs-0/animegrimoire/-/blob/master/docs/syncthing/pairing.md) How to pair my Syncthing to Animegrimoire
+2. [[Doc]](https://gitlab.com/initramfs-0/animegrimoire/-/blob/master/docs/syncthing/how-it-works.md) How Syncthing works
