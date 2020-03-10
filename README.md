@@ -1,13 +1,13 @@
 <div align="center">
-<a href="https://animegrimoire.org">
+<a href="https://animegrimoire.moe">
 <img src="https://i.ibb.co/zhkrxtV/Grimoire-Archive.png" alt="animegrimoire.org" height="200" width="200"</img>
 </a>
 </div>
 
-Home: [https://animegrimoire.org](https://animegrimoire.org)<br>
+Home: [https://animegrimoire.moe](https://animegrimoire.moe)<br>
 Documentation: [Syncthing](https://gitlab.com/initramfs-0/animegrimoire/-/tree/master/docs)
 
-Old Home: [Web Archive](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119) | RIP Animegrimoire Forum [2016-2020](http://web.archive.org/web/20200223150205/https://animegrimoire.org/showthread.php?tid=1180)
+Old Home: [Web Archive](http://web.archive.org/web/20200203143744/https://animegrimoire.org/showthread.php?tid=1119)
 
 Animegrimoire preset in Handbrake, purposely for HandBrakeCLI with FDK-AAC.
 
