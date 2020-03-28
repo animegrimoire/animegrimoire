@@ -25,7 +25,7 @@ $ ./configure --enable-fdk-aac --disable-gtk --launch-jobs=$(nproc) --launch
 ```
 3. Put this script inside `for` loop, or inside torrent's client `do something after files finished downloading`
 4. Logging function is generally nice to have but it's disabled by default
-5. Visit home if you want to download our encoder [releases](https://animegrimoire.org/encoder/)
+5. Visit home if you want to download our encoder [releases](https://animegrimoire.moe/encoder/)
 
 ### How-to-use (BATCH):
 
