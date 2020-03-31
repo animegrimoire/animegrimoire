@@ -21,7 +21,7 @@ database_identifier=
 curl -i -F "file=@$2.7z" https://api.anonfile.com/upload > ~/output.txt
 store_filename="$1"
 store_url=$(cat ~/output.txt | grep short | grep https | jq . | jq .data.file.url.short)
-date_now="$(date)"
+date_now="$(date +%d%m%Y%H%M%S)"
 #Insert to database
 echo storing URL "$store_url"
 mysql --user=$database_user --password=$database_passwd $database_identifier << EOF
@@ -32,7 +32,7 @@ EOF
 curl -X POST "https://siasky.net/skynet/skyfile" -F "file=@$2.7z" > ~/output.txt
 store_filename="$1"
 store_url=$(cat ~/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
-date_now="$(date)"
+date_now="$(date +%d%m%Y%H%M%S)"
 
 echo storing URL "$store_url"
 #Insert to database
