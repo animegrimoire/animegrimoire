@@ -27,7 +27,7 @@ startl=$(date +%s)
 #|─────────────────────────────────────────────────────────────────────────────────────────|#
 
 #	Logging functions
-readonly l="animegrimoire_hssrc$(date +%d%m%H%M).log"
+readonly l="animegrimoire_logrc$(date +%d%m%H%M).log"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>"$l" 2>&1
@@ -52,7 +52,6 @@ subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo "$1" | cut -d "[" -f2 | cut -d "]" -f1)"
 preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
 finished_folder_local=/home/$USER/temp
-finished_folder_remote=kvm:/home/'REMOTE_USER'/sshfsd/finished
 finished_folder_rclone=temp:temp
 
 # Extract fonts, install and update cache
@@ -92,11 +91,10 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0
 
 # Stage 6:	Rename file names and embed CRC32 in end of encoded file (case sensitive).
 /usr/bin/rename -v "$fansub" animegrimoire "$output" > hold.name
-# For future hack in case using wrong version of rename
+# For future reference in case using wrong version of rename
 #   echo "$output" > hold.old.name
 #   sed 's/$fansub/animegrimoire/' hold.old.name > hold.name
 #   mv "$output" "$(cat hold.name)"
-
 /usr/bin/rhash --embed-crc --embed-crc-delimiter='' "$(cat hold.name | cut -d "\`" -f3 | cut -d "'" -f 1)" && rm -v hold.name
 
 # Clean up.
@@ -105,13 +103,54 @@ rm -v ./*.tmp* ; rm -v ./*.ass ; rm -v "$1_sub.mkv" ; rm -v "$1_tmp.mkv"; rm -v 
 rm -v "$1"
 
 # Move completed files
+for files in \[animegrimoire\]\ *.mp4; do echo "$files" > file_result; done
 for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" "$finished_folder_rclone"; done
-for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" "$finished_folder_remote"; done
-for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
 
 ## Exit
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
+
+## Catch all records to write in database
+database_user=
+database_passwd=
+database_identifier=
+record_filesource="$1"
+record_encodetime="$((endl-startl))"
+record_fileresult="$(cat file_result)"
+# Upload to Siasky
+curl -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" > ~/output.txt
+store_url=$(cat ~/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
+date_now="$(date +%d%m%Y%H%M%S)"
+
+# now make a short url
+curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's,",,i')" > output.txt
+store_url_short=$(cat ~/output.txt)
+rm -v ~/output.txt
+
+## Standard MySQL setup
+# using MariaDB; run '#systemctl start mariadb && mysql_secure_installation' after first install
+# then create a database to store records;
+# mysql> CREATE DATABASE database_name;
+# mysql> CREATE USER 'database_user'@'localhost' IDENTIFIED BY 'user_password';
+# mysql> GRANT ALL PRIVILEGES ON database_name.* TO 'database_user'@'localhost';
+# now we need to create a table to hold these encoding data
+# mysql> use database_name;
+# mysql> CREATE TABLE records(
+#  -> id INT NOT NULL AUTO_INCREMENT,
+#  -> date VARCHAR(20) NOT NULL,
+#  -> file_source VARCHAR(255) NOT NULL,
+#  -> file_result VARCHAR(255) NOT NULL,
+#  -> encode_time VARCHAR(10) NOT NULL,
+#  -> long_url VARCHAR(100) NOT NULL,
+#  -> short_url VARCHAR(40) NOT NULL,
+#  -> notes VARCHAR(100),
+#  -> PRIMARY KEY ( id )
+#  -> );
+
+# Write a record
+mysql --user=$database_user --password=$database_passwd $database_identifier << EOF
+INSERT INTO records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
+EOF
 
 # Push notification to telegram (https://t.me/Animegrimoire)
 #telegram_chatid=-1001081862705
