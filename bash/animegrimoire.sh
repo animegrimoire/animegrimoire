@@ -92,6 +92,11 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0
 
 # Stage 6:	Rename file names and embed CRC32 in end of encoded file (case sensitive).
 /usr/bin/rename -v "$fansub" animegrimoire "$output" > hold.name
+# For future hack in case using wrong version of rename
+#   echo "$output" > hold.old.name
+#   sed 's/$fansub/animegrimoire/' hold.old.name > hold.name
+#   mv "$output" "$(cat hold.name)"
+
 /usr/bin/rhash --embed-crc --embed-crc-delimiter='' "$(cat hold.name | cut -d "\`" -f3 | cut -d "'" -f 1)" && rm -v hold.name
 
 # Clean up.
