@@ -9,7 +9,6 @@ _name=$(echo "$1" | sed 's,/,,i' | sed 's/\s\+//g' | sed 's/$/.7z/')
 echo Folder name is: "$_folder"
 echo New generated name is: "$_name"
 
-
 # Begin packing to 7z archive
 7z -mx=0 -mhe=on a -p"animegrimoire!" "$_name" "$1" 2> /dev/null
 if [ $? -eq 0 ]
@@ -30,7 +29,7 @@ case "$answer" in
 esac
 
 # Upload
-rclone -P --fast-list copy "$_name" "$database3_destinantion"
+rclone -P --fast-list copy "$_name" "$database3_destination" 2> /dev/null
 if [ $? -eq 0 ]
 then
   echo -e "Uploading $_name done\n"
