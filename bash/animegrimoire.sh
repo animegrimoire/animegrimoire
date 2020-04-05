@@ -53,10 +53,6 @@ input=$1
 output="$(echo "$1" | cut -f 1 -d '.').mp4"
 subtitle="$(echo "$1" | cut -f 1 -d '.').ass"
 fansub="$(echo "$1" | cut -d "[" -f2 | cut -d "]" -f1)"
-preset="/home/$USER/.local/preset/x264_Animegrimoire.json"
-finished_folder_local=/home/$USER/temp
-finished_folder_rclone=temp:temp
-finished_folder_remote=kvm:/home/$REMOTE_USER/sshfsd/finished
 
 # Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$1" -y
@@ -118,9 +114,6 @@ endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
 
 ## Catch all records to write in database
-database_user=
-database_passwd=
-database_identifier=
 record_filesource="$1"
 record_encodetime="$((endl-startl))"
 record_fileresult="$(cat file_result)"
@@ -168,13 +161,13 @@ rm -v /home/index.csv
 
 # Push notification to telegram (https://t.me/Animegrimoire)
 #telegram_chatid=-1001081862705
-#telegram_key="$(printf ~/.telegram)"
+#telegram_key="$TELEGRAM_KEY"
 #telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
 #telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
-_webhook="$(cat ~/.webhook_avx)"
+_webhook="$webhook_avx"
 _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
 _description="$USER@$HOSTNAME has successfully re-encode $1 in $((endl-startl)) seconds."

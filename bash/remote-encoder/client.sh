@@ -21,28 +21,16 @@
 ##				└── finished
 ##
 
-REMOTE_HOST=""
-other=/home/$USER/Animegrimoire/sshfs/other/
-erairaws=/home/$USER/Animegrimoire/sshfs/erairaws/
-dmonhiro=/home/$USER/Animegrimoire/sshfs/dmonhiro/
-horriblesubs=/home/$USER/Animegrimoire/sshfs/horriblesubs/
-encode_folder=/home/$USER/Animegrimoire/local/encodes/
-remote_hs=sources/horriblesubs
-remote_erai=sources/erairaws
-remote_dmon=sources/dmonhiro
-_webhook_="$(cat ~/.webhook_avx)"
-#Color
-yellw=0xfae701
-gween=0x00ffbc
-rwed=0xff0004
-uwus=0xfd0093
+# Load config file
+source /home/$USER/.local/config/animegrimoire.conf
+
 #Send-msg block
 function discord_report {
 	_title_="[Encoding started]"
 	_timestamp_="$USER@$HOSTNAME $(date)"
 	_description_="Source file(s) or folder found. listing files, starting.."
-	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$gween" --footer="$_timestamp_"
-	discord-msg --webhook-url="$_webhook_" --text="$(ls -Ss1pq ./*.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
+	discord-msg --webhook-url="$webhook_avx" --title="$_title_" --description="$_description_" --color="$gween" --footer="$_timestamp_"
+	discord-msg --webhook-url="$webhook_avx" --text="$(ls -Ss1pq ./*.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 }
 
 while :
@@ -85,7 +73,7 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	if [ ! -s erai.txt ]; then
 		E=2
 		echo "$(date): erai.txt in $erairaws instruction is required to begin encoding"
-		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 81. delimiter(int) from erai.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 81. delimiter(int) from erai.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
 		E=3
 		echo "$(date): erai.txt instruction found. begin encoding"
@@ -112,7 +100,7 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	if [ ! -s dmon.txt ]; then
 		D=2
 		echo "$(date): dmon.txt instruction in $dmonhiro is required to begin encoding"
-		discord-msg --webhook-url="$_webhook_" --title="[Starting Failed]" --description="client.sh line 108. new file name from dmon.txt(str) required. exiting" --color="$rwed" --footer="$_timestamp_"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 108. new file name from dmon.txt(str) required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
 		D=3
 		echo "$(date): dmon.txt instruction found. begin encoding"
@@ -139,8 +127,8 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	_title="[Pending encodes]"
 	_timestamp="$USER@$HOSTNAME $(date)"
 	_description="Current pending for encoding."
-	discord-msg --webhook-url="$_webhook_" --title="$_title" --description="$_description" --color="$yellw" --footer="$_timestamp"
-	discord-msg --webhook-url="$_webhook_" --text="$(ls -Ss1pq --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
+	discord-msg --webhook-url="$webhook_avx" --title="$_title" --description="$_description" --color="$yellw" --footer="$_timestamp"
+	discord-msg --webhook-url="$webhook_avx" --text="$(ls -Ss1pq --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 else
 	echo "$(date): File(s) in other folder not found. subroutine finished."
 	O=2
@@ -150,7 +138,7 @@ fi
 	_title_="[Heartbeat]"
 	_timestamp_="AVX-chan@$HOSTNAME $(date)"
 	_description_="Subroutine finished with code $H$E$D$O. Sleeping for next 3600s"
-	discord-msg --webhook-url="$_webhook_" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
+	discord-msg --webhook-url="$webhook_avx" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
 	sleep 3600
 	echo "$(date): Remounting sshfs folder"
 	sudo /usr/bin/umount /home/"$USER"/Animegrimoire/sshfs
