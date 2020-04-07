@@ -1,0 +1,31 @@
+web_server:
+  bind: 127.0.0.1
+  port: 9999
+  web_ui: yes
+  base_url: /
+
+schedules:
+  - tasks: [HorribleSubs-RSS]
+    interval:
+      minutes: 30
+
+tasks:
+  HorribleSubs-RSS:
+    rss: https://nyaa.si/?page=rss&q=720p&c=1_2&f=0&u=HorribleSubs
+    series:
+    - Major 2nd S2
+    - Bungo to Alchemist - Shinpan no Haguruma
+    - Listeners
+    - Nami yo Kiitekure
+    - Arte
+    - Hamefura
+    - Gal to Kyouryuu
+    - Yesterday wo Utatte
+    - Honzuki no Gekokujou
+    - IDOLiSH7 S2
+    - Digimon Adventure (2020)
+    - Tsugumomo S2
+    - Shachou, Battle no Jikan desu!
+    - Gleipnir
+    - Kingdom S3
+    download: /home/avi/Archive/sshfsd/rss
