@@ -20,7 +20,7 @@ else
   echo -e "Failed to create $_name\n" >&2
   exit
 fi
-echo -e "now staging "$_name" to "$database3_destination"\n"
+echo -e "now staging "$_name" to "$database_manual_dest"\n"
 read -p "Continue (y/n)?" answer
 case "$answer" in
   y|Y ) ;;
@@ -29,7 +29,7 @@ case "$answer" in
 esac
 
 # Upload
-rclone -P --fast-list copy "$_name" "$database3_destination" 2> /dev/null
+rclone -P --fast-list copy "$_name" "$database_manual_dest" 2> /dev/null
 if [ $? -eq 0 ]
 then
   echo -e "Uploading $_name done\n"
@@ -44,6 +44,6 @@ echo "This script was running for $((endl-startl)) seconds."
 
 # Store Records
 date_now="$(date +%d%m%Y%H%M%S)"
-mysql --user=$database3_user --password=$database3_passwd $database3_identifier << EOF
+mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_manual << EOF
 INSERT INTO records (id, date, title, size, archive, note) VALUES (NULL, "$date_now", "$_folder", "$_size", '$_file', "$database3_user");
 EOF

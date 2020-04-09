@@ -148,12 +148,12 @@ rm -v /home/$USER/output.txt
 #  -> );
 
 # Write a record
-mysql --user=$database_user --password=$database_passwd $database_identifier << EOF
+mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder << EOF
 INSERT INTO records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
 EOF
 
 # Dump record to update download link list
-mysql --user=$database_user --password=$database_passwd --database=$database_identifier -e "SELECT id, date, file_name, short_url, notes FROM records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
+mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_name, short_url, notes FROM records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
 
 # Update the list
 curl --user "$FTP_CREDS" --upload-file /home/$USER/index.csv ftp://"$FTP_DEST":"$FTP_REMOTE_FOLDER"/index.csv
