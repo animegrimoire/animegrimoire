@@ -124,9 +124,8 @@ date_now="$(date +%d%m%Y%H%M%S)"
 for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
 
 # now make a short url
-curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's,",,i')" > /home/$USER/output.txt
+curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's/"//g')" > /home/$USER/output.txt
 store_url_short=$(cat /home/$USER/output.txt)
-
 
 ## Standard MySQL setup
 # using MariaDB; run '#systemctl start mariadb && mysql_secure_installation' after first install
