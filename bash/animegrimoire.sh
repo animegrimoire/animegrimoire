@@ -95,7 +95,7 @@ sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0
 #   echo "$output" > hold.old.name
 #   sed 's/$fansub/animegrimoire/' hold.old.name > hold.name
 #   mv "$output" "$(cat hold.name)"
-#   rm -v hold.old.name ; rm -v hold.name
+#   rm -v hold.old.name
 /usr/bin/rhash --embed-crc --embed-crc-delimiter='' "$(cat hold.name | cut -d "\`" -f3 | cut -d "'" -f 1)" && rm -v hold.name
 
 # Clean up.
@@ -107,7 +107,6 @@ rm -v "$1"
 for files in \[animegrimoire\]\ *.mp4; do echo "$files" > file_result; done
 for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" "$finished_folder_rclone"; done
 for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" "$finished_folder_remote"; done
-for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
 
 ## Exit encoding
 endl=$(date +%s)
@@ -122,10 +121,12 @@ curl -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" >
 store_url=$(cat /home/$USER/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
 date_now="$(date +%d%m%Y%H%M%S)"
 
+for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
+
 # now make a short url
 curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's,",,i')" > /home/$USER/output.txt
 store_url_short=$(cat /home/$USER/output.txt)
-rm -v /home/$USER/output.txt
+
 
 ## Standard MySQL setup
 # using MariaDB; run '#systemctl start mariadb && mysql_secure_installation' after first install
@@ -149,15 +150,15 @@ rm -v /home/$USER/output.txt
 
 # Write a record
 mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder << EOF
-INSERT INTO records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
+INSERT INTO Records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
 EOF
 
 # Dump record to update download link list
-mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_name, short_url, notes FROM records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
+mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_result, short_url, notes FROM Records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
 
 # Update the list
 curl --user "$FTP_CREDS" --upload-file /home/$USER/index.csv ftp://"$FTP_DEST":"$FTP_REMOTE_FOLDER"/index.csv
-rm -v /home/index.csv
+rm -v /home/$USER/index.csv
 
 # Push notification to telegram (https://t.me/Animegrimoire)
 #telegram_chatid=-1001081862705
@@ -172,3 +173,10 @@ _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
 _description="$USER@$HOSTNAME has successfully re-encode $1 in $((endl-startl)) seconds."
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
+
+# Push notification to Discord ddl
+_webhook="$webhook_nivida"
+_title="New Episode encoded"
+_timestamp="$USER@$HOSTNAME $(date)"
+_description="$record_fileresult"
+discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description \n\n $(jq -Rs . </home/$USER/output.txt | cut -c 2- | rev | cut -c 2- | rev)" --color "0xff0004" --footer="$_timestamp"
