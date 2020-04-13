@@ -117,7 +117,7 @@ record_filesource="$1"
 record_encodetime="$((endl-startl))"
 record_fileresult="$(cat file_result)"
 # Upload to Siasky
-curl -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" > /home/$USER/output.txt
+curl --no-keepalive -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" > /home/$USER/output.txt
 store_url=$(cat /home/$USER/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
 date_now="$(date +%d%m%Y%H%M%S)"
 
