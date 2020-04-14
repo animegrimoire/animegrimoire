@@ -107,25 +107,29 @@ rm -v "$1"
 for files in \[animegrimoire\]\ *.mp4; do echo "$files" > file_result; done
 for files in \[animegrimoire\]\ *.mp4; do rclone -v copy "$files" "$finished_folder_rclone"; done
 for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" "$finished_folder_remote"; done
+for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
 
 ## Exit encoding
 endl=$(date +%s)
 echo "This script was running for $((endl-startl)) seconds."
 
 ## Catch all records to write in database
-record_filesource="$1"
-record_encodetime="$((endl-startl))"
-record_fileresult="$(cat file_result)"
-# Upload to Siasky
-curl --no-keepalive -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" > /home/$USER/output.txt
-store_url=$(cat /home/$USER/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
-date_now="$(date +%d%m%Y%H%M%S)"
+#record_filesource="$1"
+#record_encodetime="$((endl-startl))"
+#record_fileresult="$(cat file_result)"
+## Upload to Siasky
+#curl --no-keepalive -X POST "https://siasky.net/skynet/skyfile" -F "file=@$record_fileresult" > /home/$USER/output.txt
+#store_url=$(cat /home/$USER/output.txt | jq .skylink | sed  's,","https://siasky.net/,i')
+#date_now="$(date +%d%m%Y%H%M%S)"
 
-for files in \[animegrimoire\]\ *.mp4; do mvg -vg "$files" "$finished_folder_local"; done
+## Upload to anonfile
+#curl -F "file=@$record_fileresult" https://api.anonfile.com/upload
+#store_url=$(cat output.txt | jq . | jq .data.file.url.short | sed 's/"//g')
+#date_now="$(date +%d%m%Y%H%M%S)
 
 # now make a short url
-curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's/"//g')" > /home/$USER/output.txt
-store_url_short=$(cat /home/$USER/output.txt)
+#curl "http://tinyurl.com/api-create.php?url=$(echo $store_url | sed 's/"//g')" > /home/$USER/output.txt
+#store_url_short=$(cat /home/$USER/output.txt)
 
 ## Standard MySQL setup
 # using MariaDB; run '#systemctl start mariadb && mysql_secure_installation' after first install
@@ -148,23 +152,27 @@ store_url_short=$(cat /home/$USER/output.txt)
 #  -> );
 
 # Write a record
-mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder << EOF
-INSERT INTO Records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
-EOF
+#mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder << EOF
+#INSERT INTO Records (id, date, file_source, file_result, encode_time, long_url, short_url, notes) VALUES (NULL, "$date_now", "$record_filesource", "$record_fileresult", "$record_encodetime", '$store_url', '$store_url_short', "$database_user");
+#EOF
 
 # Dump record to update download link list
-mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_result, short_url, notes FROM Records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
+#mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_result, short_url, notes FROM Records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > /home/$USER/index.csv
 
 # Update the list
-curl --user "$FTP_CREDS" --upload-file /home/$USER/index.csv ftp://"$FTP_DEST":"$FTP_REMOTE_FOLDER"/index.csv
-rm -v /home/$USER/index.csv
+#curl --user "$FTP_CREDS" --upload-file /home/$USER/index.csv ftp://"$FTP_DEST":"$FTP_REMOTE_FOLDER"/index.csv
+#rm -v /home/$USER/index.csv
 
-# Push notification to telegram (https://t.me/Animegrimoire)
+## Push notification to telegram (https://t.me/Animegrimoire)
+#generate next command to avoid literal string got passed
+#exec=$(echo printf \' "$record_fileresult" \\n "$store_url_short" \' \| telegram-send \-\-stdin)
+#eval $exec && exev=""
 #telegram_chatid=-1001081862705
 #telegram_key="$TELEGRAM_KEY"
 #telegram_api="https://api.telegram.org/bot$telegram_key/sendMessage?chat_id=$telegram_chatid"
 #telegram_message="[Notice] $USER@$HOSTNAME has successfully re-encode "$1" in $((endl-startl)) seconds."
 #curl -X POST "$telegram_api&text='$message'"
+
 
 # Push notification to Discord using Webhook (https://github.com/ChaoticWeg/discord.sh)
 _webhook="$webhook_avx"
@@ -174,8 +182,8 @@ _description="$USER@$HOSTNAME has successfully re-encode $1 in $((endl-startl)) 
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
 
 # Push notification to Discord ddl
-_webhook="$webhook_nivida"
-_title="New Episode encoded"
-_timestamp="$USER@$HOSTNAME $(date)"
-_description="$record_fileresult"
-discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description \n\n $(jq -Rs . </home/$USER/output.txt | cut -c 2- | rev | cut -c 2- | rev)" --color "0xff0004" --footer="$_timestamp"
+#_webhook="$webhook_nivida"
+#_title="New Episode encoded"
+#_timestamp="$USER@$HOSTNAME $(date)"
+#_description="$record_fileresult"
+#discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description \n\n $(jq -Rs . </home/$USER/output.txt | cut -c 2- | rev | cut -c 2- | rev)" --color "0xff0004" --footer="$_timestamp"
