@@ -29,6 +29,18 @@ function tree_animegrimoire {
 
 # Begin a for Loop, open one loop to catch file with '\[animegrimoire\]\ *.mp4' pattern
 while :
+    # Trap process to make sure there's a valid '\[animegrimoire\]\ *.mp4' file before running but spawn 
+    # a different while loop, the first loop should be used for process exit if return code from httpie != zero
+    while :
+        do
+            if [ "$(ls -1 ./*.mp4 2>/dev/null | wc -l )" -gt 0 ]; then
+                echo "$(date): \[animegrimoire\]\ *.mp4 Found. Continue"
+                break
+            else
+                echo "$(date): \[animegrimoire\]\ *.mp4 Not Found. retrying.."
+                sleep 600
+            fi
+    done
     do
     startl=$(date +%s)
     for files in \[animegrimoire\]\ *.mp4
