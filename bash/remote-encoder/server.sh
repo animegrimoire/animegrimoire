@@ -18,7 +18,7 @@ INSERT INTO Records (id, date, file_source, encode_time, long_url, file_result, 
 EOF
 }
 function mysql_dump {
-    mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_result, short_url, notes FROM Records;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > ./index.csv
+    mysql --host=$database_host --user=$database_user --password=$database_passwd --database=$database_encoder -e "SELECT id, date, file_result, short_url, notes FROM Records ORDER BY file_result ASC;" | sed 's/\t/","/g;s/^/"/;s/$/"/;s/\n//g' | sed 's/\"\"/\"/g' > ./index.csv
 }
 function update_tree {
     curl --user "FTP_USER" --upload-file ./tree.html ftp://"FTP_DEST"/tree.html
