@@ -106,8 +106,7 @@ while :
     # Cycle end, wait before restarting routine
     endl=$(date +%s)
     echo "Uploading file (s) finished in $((endl-startl)) seconds."
-    sleep 14400
 
-    # After period of time is done, restart to beginning
+    # Restart to beginning
     echo "$(date): go to beginning"
 done
