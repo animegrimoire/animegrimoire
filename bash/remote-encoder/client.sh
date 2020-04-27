@@ -96,23 +96,24 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	D=1
 	echo "$(date): File(s) in dmonhiro folder found. begin encoding"
 
-	# Since DmonHiro require "$2" input as file title, make sure it's exist
+	# Since DmonHiro require "$2" input as file title and delimiter, make sure it's exist
 	if [ ! -s dmon.txt ]; then
 		D=2
 		echo "$(date): dmon.txt instruction in $dmonhiro is required to begin encoding"
 		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 108. new file name from dmon.txt(str) required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
 		D=3
-		echo "$(date): dmon.txt instruction found. begin encoding"
-		_dmon_=$(cat dmon.txt)
-		echo dmon new file name is "$_dmon_"
-		cd "$dmonhiro" || exit
-		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.mkv "$encode_folder"
-		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.ass "$encode_folder"
-		cd "$encode_folder" || exit
-		discord_report
-		for dmnrc in *.mkv; do dmonhiro.sh "$dmnrc" "$_dmon_"; done
-		rm -rfv dmon.txt
+        echo "$(date): dmon.txt instruction found. begin encoding"
+        _dmon_="$(cat dmon.txt | head -n 1)"
+        _dlim_="$(cat dmon.txt | tail -n 1)"
+        echo dmon new file name is "$_dmon_" and delimiter value is "$_dlim_"
+        cd "$dmonhiro" || exit
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.mkv "$encode_folder"
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.ass "$encode_folder"
+        cd "$encode_folder" || exit
+        discord_report
+        for dmnrc in *.mkv; do dmonhiro.sh "$dmnrc" "$_dmon_" "$_dlim_"; done
+        rm -rfv dmon.txt
 	fi
 else
 	echo "$(date): File(s) not found in dmonhiro folder. go to next sources"

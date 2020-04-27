@@ -2,16 +2,18 @@
 startl=$(date +%s)
 # Load config file
 source /home/$USER/.local/config/animegrimoire.conf
-# case       : DmonHiro
+# case       : BluRay Releases - General
 # type       : BD Releases
 # is HBR     : NO
 # common note: Files has episode note, has no '[fansub]' tag, has episode name, subtitle is separated
-#            : [00] - this:EpisodeName.mkv
-#            : [00] - this:EpisodeName.ass
+#            : this:EpisodeName - 00.mkv
+#            : this:EpisodeName - 00.ass
 #            : Audio successfuly parsed as 'jp', Subtitle is successfully parsed as 'eng'
-#    Scripted by Celestia, for file structure and styles see /animegrimoire.sh.
+#            : To decide how many delimiter is needed, for example "Darling in the Franxx - 01.mkv" 
+#            : then you need to set delimiter at '6' to catch it's '01' value.
+#    Scripted by Celestia and altered by I.E. & Leanne, for file structure and styles see /animegrimoire.sh.
 #
-#    USAGE: ./dmonhiro.sh '[00] - this:EpisodeName.mkv' 'this:New Episode Name'
+#    USAGE: ./dmonhiro.sh 'this:EpisodeName - 00.mkv' 'this:New Episode Name' 'this:Episode Delimiter'
 
 ##Logging functions
 readonly l="animegrimoire_dmonhiro_$(date +%d%m%H%M).log"
@@ -37,10 +39,10 @@ subtitle=$(echo "$1" | cut -f 1 -d '.').ass
 
 ##Staging input Files
 # 1: Embed Watermark
-sed '/Format\: Name/a Style\: Watermark,Cambria,12,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,1,0,0,100,100,0,0,1,2,1.2,9,10,10,10,1' "$subtitle" > "mod_sub.tmp"
+sed '/Format\: Name/a Style\: Watermark,Worstveld Sling,20,&H00FFFFFF,&H00FFFFFF,&H00FFFFFF,&H00FFFFFF,0,0,0,0,100,100,0,0,1,0,0,9,0,5,0,11' "$subtitle" > "mod_sub.tmp"
 sed '/Format\: Layer/a Dialogue\: 0,0:00:00.00,0:00:30.00,Watermark,,0000,0000,0000,,animegrimoire.moe' "mod_sub.tmp" > "$subtitle"
 # 2: Register a new name
-file_name="[animegrimoire] $2 - $(echo "$1" | cut -f 1 -d ' ') [BD720p].mkv"
+file_name="[animegrimoire] $2 - $(echo "$1" | cut -f "$3" -d " " | cut -f 1 -d ".") [BD720p].mkv"
 /usr/bin/mv -v "$1" "$file_name"
 # 3: Extract fonts, install and update cache
 ffmpeg -dump_attachment:t "" -i "$file_name" -y
