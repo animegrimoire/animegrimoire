@@ -1,4 +1,6 @@
 #!/bin/bash
+source /home/$USER/.local/config/animegrimoire.conf
+
 clear
 echo 'Select action'
 echo '1) Backup'

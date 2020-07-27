@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /tree/
+User-agent: *
+Disallow: /assets/
+Crawl-delay: 120
+Sitemap: http://animegrimoire.moe/sitemap.xml

@@ -7,16 +7,18 @@
 ##
 ## We will exclusively using SSHFS as file transport.
 ## Important: these are main folder that used in whole encoding process
-## /home/$USER/Animegrimoire/sshfs/{horriblesubs|dmonhiro|erairaws|other}/	as source files location
+## /home/$USER/Animegrimoire/sshfs/{horriblesubs|bluray{0..3}|other}/ as source files location
 ## /home/$USER/Animegrimoire/sshfs/finished	as encoded files location
-## /home/$USER/Animegrimoire/local/encodes		as encoding place
+## /home/$USER/Animegrimoire/local/encodes as encoding place
 ##
 ##~/Animegrimoire/local
 ##			|   └── /encodes
 ##			sshfs/
 ##				├── horriblesubs
-##				├── dmonhiro
-##				├── erairaws
+##				├── bluray0
+##				├── bluray1
+##				├── bluray2
+##				├── bluray3
 ##				├── other
 ##				└── finished
 ##
@@ -24,106 +26,172 @@
 # Load config file
 source /home/$USER/.local/config/animegrimoire.conf
 
-#Send-msg block
-function discord_report {
-	_title_="[Encoding started]"
-	_timestamp_="$USER@$HOSTNAME $(date)"
-	_description_="Source file(s) or folder found. listing files, starting.."
-	discord-msg --webhook-url="$webhook_avx" --title="$_title_" --description="$_description_" --color="$gween" --footer="$_timestamp_"
-	discord-msg --webhook-url="$webhook_avx" --text="$(ls -Ss1pq ./*.mkv --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
-}
-
 while :
 do
 # make sure there aren't any other HandBrakeCLI process running
-	while :
-	do
-		if pgrep -x "HandBrakeCLI" > /dev/null
-		then
-		echo "HandBrakeCLI is running, retrying.."
-		sleep 300
-	else
-		echo "HandBrakeCLI process not found, continuing subroutine."
-		break
-		fi
-	done
+	handbrake_test
+
+# make sure sshfs is running
+	sshfs_test
 
 # Stage 1: go to horriblesubs folder, check if file exist, report when start encoding
 cd "$horriblesubs" || exit
 if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
-	H=1
+	A=1
 	echo "$(date): File(s) found in HorribleSubs folder. begin encoding"
 	rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_hs"/*.mkv "$encode_folder"
 	cd "$encode_folder" || exit
 	discord_report
-	for hssrc in *.mkv; do animegrimoire.sh "$hssrc"; done
+	for files in *.mkv; do animegrimoire.sh "$files"; done
 else
 	echo "$(date): File(s) not found in HorribleSubs folder. go to next sources"
-	H=0
+	A=0
 	cd ~ || exit
 fi
 
-# Stage 2: go to erairaws folder, check if file exist, report if exist
-cd "$erairaws" || exit
+# Stage 2: go to bluray, check if file exist, report if exist
+cd "$bluray0" || exit
 if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
-	E=1
-	echo "$(date): File(s) found in Erai-raws folder. begin encoding"
+	B=1
+	echo "$(date): File(s) in bluray(s) folder found. begin encoding"
 
-	# Since Erai-raws require "$2" input as delimiter, make sure it's exist
-	if [ ! -s erai.txt ]; then
-		E=2
-		echo "$(date): erai.txt in $erairaws instruction is required to begin encoding"
-		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 81. delimiter(int) from erai.txt required. exiting" --color="$rwed" --footer="$_timestamp_"
+	# Since bluray require "$2" input as file title and delimiter, make sure it's exist
+	if [ ! -s note.txt ]; then
+		B=2
+		echo "$(date): note.txt instruction in $bluray0 is required to begin encoding"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 73. new file name from note.txt(str 0,1) required. exiting" --color="$rwed" --footer="$_timestamp_"
 	else
-		E=3
-		echo "$(date): erai.txt instruction found. begin encoding"
-		_erai_=$(cat erai.txt)
-		echo erai delimiter is "$_erai_"
-		rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_erai"/*.mkv "$encode_folder"
-		cd "$encode_folder" || exit
-		discord_report
-		for ersrc in \[Erai-raws\]\ *.mkv; do erairaws.sh "$ersrc" "$_erai_"; done
-		rm -rfv erai.txt
-	fi
-else
-	echo "$(date): File(s) not found in erairaws folder. go to next sources"
-	E=4
-	cd ~ || exit
-fi
-# Stage 3: go to dmonhiro, check if file exist, report if exist
-cd "$dmonhiro" || exit
-if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
-	D=1
-	echo "$(date): File(s) in dmonhiro folder found. begin encoding"
-
-	# Since DmonHiro require "$2" input as file title and delimiter, make sure it's exist
-	if [ ! -s dmon.txt ]; then
-		D=2
-		echo "$(date): dmon.txt instruction in $dmonhiro is required to begin encoding"
-		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 108. new file name from dmon.txt(str) required. exiting" --color="$rwed" --footer="$_timestamp_"
-	else
-		D=3
-        echo "$(date): dmon.txt instruction found. begin encoding"
-        _dmon_="$(cat dmon.txt | head -n 1)"
-        _dlim_="$(cat dmon.txt | tail -n 1)"
-        echo dmon new file name is "$_dmon_" and delimiter value is "$_dlim_"
-        cd "$dmonhiro" || exit
-        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.mkv "$encode_folder"
-        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_dmon"/*.ass "$encode_folder"
+		B=3
+        echo "$(date): note.txt instruction found. begin encoding"
+        _mon_="$(cat note.txt | head -n 1)"
+        _lim_="$(cat note.txt | tail -n 1)"
+        echo new file name is "$_mon_" and delimiter value is "$_lim_"
+        cd "$bluray0" || exit
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray0"/*.mkv "$encode_folder"
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray0"/*.ass "$encode_folder"
         cd "$encode_folder" || exit
         discord_report
-        for dmnrc in *.mkv; do dmonhiro.sh "$dmnrc" "$_dmon_" "$_dlim_"; done
-        rm -rfv dmon.txt
+        for files in *.mkv; do bluray.sh "$files" "$_mon_" "$_lim_"; done
+        rm -rfv note.txt
 	fi
 else
-	echo "$(date): File(s) not found in dmonhiro folder. go to next sources"
+	echo "$(date): File(s) not found in bluray folder. go to next sources"
+	B=4
+	cd ~ || exit
+fi
+
+# Stage 3: back to horriblesubs folder, check if file exist, report when start encoding. we can't use goto..
+cd "$horriblesubs" || exit
+if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
+	C=1
+	echo "$(date): File(s) found in HorribleSubs folder. begin encoding"
+	rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_hs"/*.mkv "$encode_folder"
+	cd "$encode_folder" || exit
+	discord_report
+	for files in *.mkv; do animegrimoire.sh "$files"; done
+else
+	echo "$(date): File(s) not found in HorribleSubs folder. go to next sources"
+	C=0
+	cd ~ || exit
+fi
+
+# Stage 4A: go to bluray, check if file exist, report if exist. this is just a repeat so we can queue different bd titles
+cd "$bluray1" || exit
+if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
+	D=1
+	echo "$(date): File(s) in bluray(s) folder found. begin encoding"
+
+	# Since bluray require "$2" input as file title and delimiter, make sure it's exist
+	if [ ! -s note.txt ]; then
+		D=2
+		echo "$(date): note.txt instruction in $bluray1 is required to begin encoding"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 119. new file name from note.txt(str 0,1) required. exiting" --color="$rwed" --footer="$_timestamp_"
+	else
+		D=3
+        echo "$(date): note.txt instruction found. begin encoding"
+        _mon_="$(cat note.txt | head -n 1)"
+        _lim_="$(cat note.txt | tail -n 1)"
+        echo new file name is "$_mon_" and delimiter value is "$_lim_"
+        cd "$bluray1" || exit
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray1"/*.mkv "$encode_folder"
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray1"/*.ass "$encode_folder"
+        cd "$encode_folder" || exit
+        discord_report
+        for files in *.mkv; do bluray.sh "$files" "$_mon_" "$_lim_"; done
+        rm -rfv note.txt
+	fi
+else
+	echo "$(date): File(s) not found in bluray folder. go to next sources"
 	D=4
 	cd ~ || exit
 fi
-# Stage 4: go to other folder, check if file exist, report if exist
+
+# Stage 4B: go to bluray, check if file exist, report if exist. this is just a repeat so we can queue different bd titles
+cd "$bluray2" || exit
+if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
+	E=1
+	echo "$(date): File(s) in bluray(s) folder found. begin encoding"
+
+	# Since bluray require "$2" input as file title and delimiter, make sure it's exist
+	if [ ! -s note.txt ]; then
+		E=2
+		echo "$(date): note.txt instruction in $bluray2 is required to begin encoding"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 150. new file name from note.txt(str 0,1) required. exiting" --color="$rwed" --footer="$_timestamp_"
+	else
+		E=3
+        echo "$(date): note.txt instruction found. begin encoding"
+        _mon_="$(cat note.txt | head -n 1)"
+        _lim_="$(cat note.txt | tail -n 1)"
+        echo new file name is "$_mon_" and delimiter value is "$_lim_"
+        cd "$bluray1" || exit
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray2"/*.mkv "$encode_folder"
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray2"/*.ass "$encode_folder"
+        cd "$encode_folder" || exit
+        discord_report
+        for files in *.mkv; do bluray.sh "$files" "$_mon_" "$_lim_"; done
+        rm -rfv note.txt
+	fi
+else
+	echo "$(date): File(s) not found in bluray folder. go to next sources"
+	E=4
+	cd ~ || exit
+fi
+
+# Stage 4C: go to bluray, check if file exist, report if exist. this is just a repeat so we can queue different bd titles
+cd "$bluray3" || exit
+if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
+	F=1
+	echo "$(date): File(s) in bluray(s) folder found. begin encoding"
+
+	# Since bluray require "$2" input as file title and delimiter, make sure it's exist
+	if [ ! -s note.txt ]; then
+		F=2
+		echo "$(date): note.txt instruction in $bluray3 is required to begin encoding"
+		discord-msg --webhook-url="$webhook_avx" --title="[Starting Failed]" --description="client.sh line 181. new file name from note.txt(str 0,1) required. exiting" --color="$rwed" --footer="$_timestamp_"
+	else
+		F=3
+        echo "$(date): note.txt instruction found. begin encoding"
+        _mon_="$(cat note.txt | head -n 1)"
+        _lim_="$(cat note.txt | tail -n 1)"
+        echo new file name is "$_mon_" and delimiter value is "$_lim_"
+        cd "$bluray1" || exit
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray3"/*.mkv "$encode_folder"
+        rsync --remove-source-files --progress rsync://"$REMOTE_HOST"/"$remote_bluray3"/*.ass "$encode_folder"
+        cd "$encode_folder" || exit
+        discord_report
+        for files in *.mkv; do bluray.sh "$files" "$_mon_" "$_lim_"; done
+        rm -rfv note.txt
+	fi
+else
+	echo "$(date): File(s) not found in bluray folder. go to next sources"
+	F=4
+	cd ~ || exit
+fi
+
+# Stage 5: go to other folder, check if file exist, report if exist
 cd "$other" || exit
 if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
-	O=1
+	G=1
 	echo "$(date): File(s) found in other folder. Reporting it."
 	_title="[Pending encodes]"
 	_timestamp="$USER@$HOSTNAME $(date)"
@@ -132,17 +200,17 @@ if [ "$(ls -1 ./*.mkv 2>/dev/null | wc -l )" -gt 0 ]; then
 	discord-msg --webhook-url="$webhook_avx" --text="$(ls -Ss1pq --block-size=1000000 | jq -Rs . | cut -c 2- | rev | cut -c 2- | rev)"
 else
 	echo "$(date): File(s) in other folder not found. subroutine finished."
-	O=2
+	G=2
 	cd ~ || exit
 fi
-# Stage 5: report a heartbeat then sleep before going back to loop
+# Stage 6: report a heartbeat then sleep before going back to loop
 	_title_="[Heartbeat]"
 	_timestamp_="AVX-chan@$HOSTNAME $(date)"
-	_description_="Subroutine finished with code $H$E$D$O. Sleeping for next 3600s"
+	_description_="Subroutine finished with code $A$B$C$D$E$F$G. Sleeping for next 3600s"
 	discord-msg --webhook-url="$webhook_avx" --title="$_title_" --description="$_description_" --color="$uwus" --footer="$_timestamp_"
-	sleep 3600
+	sleep 10800
 	echo "$(date): Remounting sshfs folder"
 	sudo /usr/bin/umount /home/"$USER"/Animegrimoire/sshfs
-	~/.local/bin/ssfsd-mount
+	sshfs-mount
 	echo "$(date): Return to beginning"
 done

@@ -1,0 +1,54 @@
+body,
+html {
+	height: 100%;
+	margin: 0;
+	font: 400 15px/1.8"Lato", sans-serif;
+	color: #777
+}
+.bgimg-1,
+.bgimg-2,
+.bgimg-3 {
+	position: relative;
+	opacity: 1;
+	background-position: center;
+	background-repeat: repeat;
+	background-size: cover
+}
+.bgimg-1 {
+	background-image: url(/assets/bg.webp);
+	background-size: cover;
+	height: 100%;
+	overflow: hidden;
+}
+.caption {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	text-align: center;
+	color: #fff
+}
+h3 {
+	letter-spacing: 10px;
+	text-transform: uppercase;
+	text-shadow: 2px 1px #0af;
+	font: 34px"Lato", sans-serif;
+	color: #fff
+}
+.text {
+	letter-spacing: 1px;
+	font: 16px"Lato", sans-serif;
+	color: #fff;
+	text-align: center;
+	line-height: 1.5
+}
+.footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	font: 12px"Lato", sans-serif
+}
