@@ -1,6 +1,6 @@
 <div align="center">
 <a href="https://animegrimoire.moe">
-<img src="https://i.ibb.co/zhkrxtV/Grimoire-Archive.png" alt="animegrimoire.org" height="200" width="200"</img>
+<img src="https://i.ibb.co/njzy67z/Animegrimoire-moe.png" alt="animegrimoire.org" height="200" width="200"</img>
 </a>
 </div>
 
