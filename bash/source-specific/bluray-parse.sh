@@ -13,11 +13,8 @@ sed -i 's/`//g' ./filename.tmp
 sed -i 's/\r$//g' ./filename.tmp
 sed -i 's/ \[.*\]//g' ./filename.tmp
 sed -i 's/\[*.*\] //' ./filename.tmp
-sed -i 's/v2//' ./filename.tmp
-sed -i 's/v1//' ./filename.tmp
-sed -i 's/v1//' ./name.tmp
 sed -i 's/Multiple Subtitle//' ./filename.tmp
-sed -i 's/\[\]//' ./filename.tmp
+sed -i 's/\[\]//g' ./filename.tmp
 sed -i 's/ (.*)//' ./filename.tmp
 sed -i 's/[^0-9]//g' ./filename.tmp
 
@@ -111,6 +108,7 @@ _title="New Queued File"
 _timestamp="$USER@$HOSTNAME $(date)"
 _description="$construct_name"
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "$yellw" --footer="$_timestamp"
+telegram-send --format markdown "New Queued File: *$construct_name*"
 
   ;;
   n)
@@ -194,9 +192,10 @@ endl=$(date +%s)
 # Report Result to Discord
 _webhook="$webhook_avx"
 _title="New Queued File"
-_timestamp="$USER@$HOSTNAME $(date)"
+_timestamp="$USER@$HOSTNAME $(date) $((endl-startl))s"
 _description="$construct_name"
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "$yellw" --footer="$_timestamp"
+telegram-send --format markdown "New Queued File: *$construct_name*"
 
   ;;
   *)

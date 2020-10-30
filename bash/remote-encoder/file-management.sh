@@ -52,7 +52,7 @@ if [ $file_duration -gt 900 ]
         ffmpeg -ss 00:14:30 -i "$file_name" -to 00:00:20 -c copy "$split"
     # Now $split has 20s duration of video with copy codec without doing any encoding process
     # then send it using telegram-send to preconfigured groups
-        telegram-send --config $telegram_preview --video "$split" --caption "$split"
+        telegram-upload --config $telegram_upload "$split" --forward https://t.me/animegrimoire
         rm -v "$split"
     else
         echo "$(date): $file_duration is less than 900s, do nothing."

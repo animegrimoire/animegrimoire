@@ -11,11 +11,8 @@ sed -i 's/`//g' ./name.tmp
 sed -i 's/\r$//g' ./name.tmp
 sed -i 's/\[*.*\] //' ./name.tmp
 sed -i 's/ \[.*\]//g' ./name.tmp
-sed -i 's/v2//' ./name.tmp
-sed -i 's/v1//' ./name.tmp
-sed -i 's/v0//' ./name.tmp
 sed -i 's/Multiple Subtitle//' ./name.tmp
-sed -i 's/\[\]//' ./name.tmp
+sed -i 's/\[\]//g' ./name.tmp
 sed -i 's/ (.*)//' ./name.tmp
 file_name="$(<./name.tmp)"
 subtitle_name="$(echo "$file_name" | cut -f 1 -d '.').ass"
@@ -24,7 +21,7 @@ mv -v "$1" "$file_name"
 
 # Select Video, Audio, Subtitle Streams
 echo -e "\nffprobe: '\033[36m$file_name\e[0m'"
-ffprobe -v quiet -show_entries stream=index:stream=codec_long_name:stream=index:stream_tags=language -of csv -i "$construct_name" | sed 's/,/ /g'
+ffprobe -v quiet -show_entries stream=index:stream=codec_long_name:stream=index:stream_tags=language -of csv -i "$file_name" | sed 's/,/ /g'
 echo -e "\nExtracting '\033[36m$file_name\e[0m'"
 echo -e "Enter a valid integer in 'VIDEO, AUDIO, SUBTITLE' format:"
 read -r streams
@@ -74,9 +71,10 @@ mv -v "$subtitle_name" "$airing_season"
 [ ! -e ./name.tmp ] || rm ./name.tmp
 endl=$(date +%s)
 
-# Report Result to Discord
+# Report Result to Discord and Telegram
 _webhook="$webhook_extractor"
 _title="New Queued File"
-_timestamp="$USER@$HOSTNAME $(date)"
-_description="$USER@$HOSTNAME has successfully extracting $1 in $((endl-startl)) seconds."
+_timestamp="$USER@$HOSTNAME $(date) $((endl-startl))s"
+_description="$file_name"
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "$yellw" --footer="$_timestamp"
+telegram-send --format markdown "New Queued File: *$file_name*"

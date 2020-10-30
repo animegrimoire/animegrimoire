@@ -38,6 +38,16 @@ rm -v ./filename.tmp
 
 # Stage 5:	send subbed $input to HandBrakeCLI encoder with animegrimoire's preset.
 echo "$(date): Begin encoding process"
+
+# 5.1: Push Notification while encoding started
+telegram-send --format markdown "Encoding Start(Airing): *$1*"
+_webhook="$webhook_avx"
+_title="Encoding Start"
+_timestamp="$USER@$HOSTNAME $(date)"
+_description="Encoding Start(BD): $1"
+discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
+
+# 5.2 Initiate encoding
 /usr/local/bin/HandBrakeCLI --preset-import-file "$preset" -Z "x264_Animegrimoire" -i "$input" -o "$output"
 
 # Stage 6: Insert [animegrimoire] and resolution tag
@@ -60,7 +70,9 @@ rm -v "$input"
 
 # Move completed files
 echo "$(date): Moving finished files"
+for files in \[animegrimoire\]\ *.mp4; do rclone copy "$files" "$finished_folder_rclone"; done
 for files in \[animegrimoire\]\ *.mp4; do scp -v "$files" "$finished_folder_remote" && rm -v "$files"; done
+for files in *.log; do scp -v "$files" "$finished_folder_remote" && rm -v "$files"; done
 
 ## Exit encoding
 endl=$(date +%s)
@@ -70,5 +82,6 @@ echo "This script was running for $((endl-startl)) seconds."
 _webhook="$webhook_avx"
 _title="[Finished Encoding]"
 _timestamp="$USER@$HOSTNAME $(date)"
-_description="$USER@$HOSTNAME has successfully re-encode $1 in $((endl-startl)) seconds."
+_description="$1 in $((endl-startl)) seconds."
 discord-msg --webhook-url="$_webhook" --title="$_title" --description "$_description" --color "0xff0004" --footer="$_timestamp"
+telegram-send --format markdown "Finished Encoding: *$1*"
